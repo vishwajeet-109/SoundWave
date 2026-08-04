@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 import { Card } from "@/shared/ui";
 
+const PLACEHOLDER =
+  "https://placehold.co/500x500/18181b/ffffff?text=Playlist";
+
 export default function PlaylistCard({
-  playlist,
+  playlist = {},
   onPlay,
 }) {
   const navigate = useNavigate();
@@ -21,6 +24,20 @@ export default function PlaylistCard({
     onPlay?.(playlist);
   };
 
+  const cover =
+    playlist.coverImage ||
+    playlist.cover ||
+    PLACEHOLDER;
+
+  const title =
+    playlist.title ||
+    playlist.name ||
+    "Untitled Playlist";
+
+  const description =
+    playlist.description ||
+    "No description available.";
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -33,14 +50,17 @@ export default function PlaylistCard({
         className="group"
       >
         <div className="relative">
-
           <img
-            src={playlist.coverImage}
-            alt={playlist.name}
+            src={cover}
+            alt={title}
+            onError={(e) => {
+              e.currentTarget.src = PLACEHOLDER;
+            }}
             className="aspect-square w-full rounded-xl object-cover transition duration-500 group-hover:scale-105"
           />
 
           <button
+            type="button"
             onClick={handlePlay}
             className="
               absolute
@@ -66,17 +86,15 @@ export default function PlaylistCard({
               fill="currentColor"
             />
           </button>
-
         </div>
 
         <h3 className="mt-4 line-clamp-1 font-semibold text-white">
-          {playlist.name}
+          {title}
         </h3>
 
         <p className="mt-1 line-clamp-2 text-sm text-zinc-400">
-          {playlist.description}
+          {description}
         </p>
-
       </Card>
     </motion.div>
   );

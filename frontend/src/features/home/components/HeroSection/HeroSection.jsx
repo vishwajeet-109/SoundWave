@@ -85,7 +85,11 @@ export default function HeroSection({
         <div className="flex justify-center">
 
           <img
-            src={featured?.coverImage}
+                src={
+  featured?.coverImage ||
+  featured?.cover ||
+  "/images/placeholder-cover.png"
+}
             alt={featured?.title}
             className="
               w-full

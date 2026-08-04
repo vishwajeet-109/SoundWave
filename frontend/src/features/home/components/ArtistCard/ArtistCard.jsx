@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 import { Card } from "@/shared/ui";
 
+const PLACEHOLDER =
+  "https://placehold.co/500x500/18181b/ffffff?text=Artist";
+
 export default function ArtistCard({
-  artist,
+  artist = {},
   onPlay,
 }) {
   const navigate = useNavigate();
@@ -21,6 +24,17 @@ export default function ArtistCard({
     onPlay?.(artist);
   };
 
+  const image =
+    artist.image ||
+    artist.avatar ||
+    artist.profileImage ||
+    PLACEHOLDER;
+
+  const name =
+    artist.name ||
+    artist.artistName ||
+    "Unknown Artist";
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -33,14 +47,17 @@ export default function ArtistCard({
         className="group text-center"
       >
         <div className="relative">
-
           <img
-            src={artist.image}
-            alt={artist.name}
+            src={image}
+            alt={name}
+            onError={(e) => {
+              e.currentTarget.src = PLACEHOLDER;
+            }}
             className="aspect-square w-full rounded-full object-cover transition duration-500 group-hover:scale-105"
           />
 
           <button
+            type="button"
             onClick={handlePlay}
             className="
               absolute
@@ -59,24 +76,21 @@ export default function ArtistCard({
               transition-all
               group-hover:translate-y-0
               group-hover:opacity-100
-            "
-          >
-            <Play
-              size={20}
-              fill="currentColor"
-            />
+            >
+              <Play
+                size={20}
+                fill="currentColor"
+              />
           </button>
-
         </div>
 
         <h3 className="mt-4 line-clamp-1 font-semibold text-white">
-          {artist.name}
+          {name}
         </h3>
 
         <p className="mt-1 text-sm text-zinc-400">
           Artist
         </p>
-
       </Card>
     </motion.div>
   );

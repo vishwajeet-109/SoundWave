@@ -6,34 +6,40 @@ import { useArtists } from "./useArtists";
 import { usePlaylists } from "./usePlaylists";
 import { useHistory } from "./useHistory";
 
+import { useAuth } from "@/context/AuthContext";
+
 export function useHome() {
   const songsQuery = useSongs();
   const albumsQuery = useAlbums();
   const artistsQuery = useArtists();
   const playlistsQuery = usePlaylists();
-  const historyQuery = useHistory();
+
+  const { isAuthenticated } = useAuth();
+
+  const historyQuery = useHistory({
+    enabled: isAuthenticated,
+  });
 
   const isLoading =
     songsQuery.isLoading ||
     albumsQuery.isLoading ||
     artistsQuery.isLoading ||
     playlistsQuery.isLoading ||
-    historyQuery.isLoading;
+    (isAuthenticated && historyQuery.isLoading);
 
   const isError =
     songsQuery.isError ||
     albumsQuery.isError ||
     artistsQuery.isError ||
-    playlistsQuery.isError ||
-    historyQuery.isError;
+    playlistsQuery.isError;
 
   const data = useMemo(
     () => ({
-      songs: songsQuery.data?.data ?? [],
-      albums: albumsQuery.data?.data ?? [],
-      artists: artistsQuery.data?.data ?? [],
-      playlists: playlistsQuery.data?.data ?? [],
-      history: historyQuery.data?.data ?? [],
+      songs: songsQuery.data?.songs ?? [],
+      albums: albumsQuery.data?.items ?? [],
+      artists: artistsQuery.data?.items ?? artistsQuery.data ?? [],
+      playlists: playlistsQuery.data?.items ?? [],
+      history: historyQuery.data ?? [],
     }),
     [
       songsQuery.data,
@@ -56,7 +62,10 @@ export function useHome() {
       albumsQuery.refetch();
       artistsQuery.refetch();
       playlistsQuery.refetch();
-      historyQuery.refetch();
+
+      if (isAuthenticated) {
+        historyQuery.refetch();
+      }
     },
   };
 }

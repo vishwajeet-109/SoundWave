@@ -17,7 +17,7 @@ export default function QuickAccess({
 
                         key={song._id}
 
-                        onClick={()=>onPlay(song)}
+                      onClick={() => onPlay?.(song)}
 
                         className="group flex items-center overflow-hidden rounded-xl bg-zinc-800/70 transition hover:bg-zinc-700"
 
@@ -25,7 +25,12 @@ export default function QuickAccess({
 
                         <img
 
-                            src={song.coverImage}
+                            src={
+        song.coverImage ||
+        song.cover ||
+        "/images/placeholder-cover.png"
+    }
+    alt={song.title}
 
                             className="h-20 w-20 object-cover"
 

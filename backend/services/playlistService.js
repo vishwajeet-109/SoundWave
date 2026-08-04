@@ -77,10 +77,19 @@ const getPlaylistById = async ({ playlistId, user }) => {
 
   if (!playlist) throw new ApiError(404, "Playlist not found.");
 
-  const isOwner = playlist.owner._id.toString() === user._id.toString();
-  if (playlist.visibility === VISIBILITY.PRIVATE && !isOwner) {
-    throw new ApiError(403, "This playlist is private.");
-  }
+  const isOwner =
+  user &&
+  playlist.owner._id.toString() === user._id.toString();
+
+if (
+  playlist.visibility === VISIBILITY.PRIVATE &&
+  !isOwner
+) {
+  throw new ApiError(
+    403,
+    "This playlist is private."
+  );
+}
   return playlist;
 };
 
@@ -91,9 +100,16 @@ const getPlaylistById = async ({ playlistId, user }) => {
 const listPlaylists = async ({ user, query }) => {
   const { page, limit, skip } = getPaginationParams(query);
 
-  const filter = {
-    $or: [{ owner: user._id }, { visibility: { $ne: VISIBILITY.PRIVATE } }],
-  };
+  const filter = user
+    ? {
+        $or: [
+          { owner: user._id },
+          { visibility: { $ne: VISIBILITY.PRIVATE } },
+        ],
+      }
+    : {
+        visibility: { $ne: VISIBILITY.PRIVATE },
+      };
 
   const [items, total] = await Promise.all([
     Playlist.find(filter)
@@ -102,10 +118,16 @@ const listPlaylists = async ({ user, query }) => {
       .skip(skip)
       .limit(limit)
       .lean(),
+
     Playlist.countDocuments(filter),
   ]);
 
-  return buildPaginatedResult({ items, total, page, limit });
+  return buildPaginatedResult({
+    items,
+    total,
+    page,
+    limit,
+  });
 };
 
 /**

@@ -21,7 +21,9 @@ export default function NewReleases({
             song={{
               _id: album._id,
               title: album.title,
-              coverImage: album.coverImage,
+              coverImage:
+    album.coverImage ||
+    album.cover,
               artist: album.artist,
             }}
             onPlay={onPlay}
