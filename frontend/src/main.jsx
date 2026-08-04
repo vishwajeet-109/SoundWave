@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./app/router/AppRouter";
 import AppProviders from "./app/providers/AppProviders";
 import { AuthProvider } from "./context/AuthContext";
+import { PlayerProvider } from "./context/PlayerContext";
 
 import "./index.css";
 
@@ -12,10 +13,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
   <AuthProvider>
-    <AppProviders>
-      <AppRouter />
-    </AppProviders>
-  </AuthProvider>
+    <PlayerProvider>
+
+        <AppProviders>
+
+            <AppRouter />
+
+        </AppProviders>
+
+    </PlayerProvider>
+</AuthProvider>
 </BrowserRouter>
   </React.StrictMode>
 );

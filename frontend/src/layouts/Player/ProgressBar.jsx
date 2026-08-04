@@ -1,45 +1,50 @@
-import { useState } from "react";
+import { usePlayer } from "@/context/usePlayer";
+
+function formatTime(time) {
+  if (!time || Number.isNaN(time)) {
+    return "0:00";
+  }
+
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
 
 export default function ProgressBar() {
-  const [progress] = useState(32);
+  const {
+    currentTime,
+    duration,
+    seek,
+  } = usePlayer();
+
+  const progress =
+    duration > 0
+      ? (currentTime / duration) * 100
+      : 0;
+
+  const handleSeek = (event) => {
+    seek(Number(event.target.value));
+  };
 
   return (
-    <div className="group flex w-full items-center gap-3">
+    <div className="flex w-full items-center gap-3">
 
       <span className="w-10 text-xs text-zinc-500">
-        1:20
+        {formatTime(currentTime)}
       </span>
 
-      <div className="relative h-1 flex-1 rounded-full bg-zinc-700">
-
-        <div
-          className="h-full rounded-full bg-primary"
-          style={{
-            width: `${progress}%`,
-          }}
-        />
-
-        <div
-          className="
-            absolute
-            top-1/2
-            hidden
-            h-3
-            w-3
-            -translate-y-1/2
-            rounded-full
-            bg-white
-            group-hover:block
-          "
-          style={{
-            left: `calc(${progress}% - 6px)`,
-          }}
-        />
-
-      </div>
+      <input
+        type="range"
+        min={0}
+        max={duration || 0}
+        value={currentTime}
+        onChange={handleSeek}
+        className="flex-1 accent-primary"
+      />
 
       <span className="w-10 text-xs text-zinc-500">
-        4:12
+        {formatTime(duration)}
       </span>
 
     </div>

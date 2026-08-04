@@ -100,9 +100,7 @@ notificationSchema.index({
   isRead: 1,
 });
 
-notificationSchema.index({
-  type: 1,
-});
+
 
 notificationSchema.index({
   createdAt: -1,

@@ -1,6 +1,7 @@
 import { Play } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { usePlayer } from "@/context/usePlayer";
 
 import { Card } from "@/shared/ui";
 
@@ -19,11 +20,19 @@ export default function MusicCard({
     }
   };
 
-  const handlePlay = (event) => {
-    event.stopPropagation();
-    onPlay?.(song);
-  };
+  const {
+    playSong,
+} = usePlayer();
 
+const handlePlay = (event) => {
+
+    event.stopPropagation();
+
+    playSong(song);
+
+    onPlay?.(song);
+
+};
   const cover =
     song.coverImage ||
     song.cover ||
