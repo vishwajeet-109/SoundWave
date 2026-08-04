@@ -1,0 +1,47 @@
+# docker-compose.yml (place at SoundWave/ root, alongside backend/ and frontend/)
+#
+# For local dev/staging only. Production should use MongoDB Atlas
+# (per TASK.md DEPLOYMENT section) rather than the mongo service below.
+
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: soundwave-backend:latest
+    container_name: soundwave-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - soundwave-net
+
+  mongo:
+    image: mongo:7
+    container_name: soundwave-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - soundwave-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - soundwave-net
+
+volumes:
+  soundwave-mongo-data:
+
+networks:
+  soundwave-net:
+    driver: bridge

@@ -1,0 +1,9 @@
+export const LAYOUT = {
+  SIDEBAR_WIDTH: 280,
+
+  SIDEBAR_COLLAPSED: 92,
+
+  PLAYER_HEIGHT: 96,
+
+  HEADER_HEIGHT: 72,
+};
