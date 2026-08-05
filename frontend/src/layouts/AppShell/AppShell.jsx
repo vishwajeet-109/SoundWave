@@ -8,37 +8,29 @@ import MusicPlayer from "@/components/player/MusicPlayer";
 import useAuth from "@/hooks/useAuth";
 
 export default function AppShell() {
+  const { user } = useAuth();
 
-    const { user } = useAuth();
+  return (
+    <div className="flex h-screen bg-zinc-950 text-white">
 
-    return (
+      <Sidebar role={user?.role} />
 
-        <div className="flex h-screen bg-background text-white">
+      <div className="flex flex-1 flex-col overflow-hidden">
 
-            <Sidebar
-                role={user?.role}
-            />
+        <Header />
 
-            <div className="flex flex-1 flex-col overflow-hidden">
+        <main className="flex-1 overflow-y-auto bg-zinc-950 px-6 py-5">
+          <Outlet />
+        </main>
 
-                <Header />
+        <MusicPlayer />
 
-                <main className="flex-1 overflow-y-auto bg-background px-6 py-5">
-  <Outlet />
-</main>
+      </div>
 
-                  
+      <div className="hidden 2xl:block">
+        <RightSidebar />
+      </div>
 
-                <MusicPlayer />
-
-            </div>
-
-            <div className="hidden 2xl:block">
-  <RightSidebar />
-</div>
-
-        </div>
-
-    );
-
+    </div>
+  );
 }
