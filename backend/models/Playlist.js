@@ -1,16 +1,28 @@
 import mongoose from "mongoose";
 
-import { CONTENT_STATUS, CONTENT_STATUS_LIST } from "../constants/contentStatus.js";
+import {
+  CONTENT_STATUS,
+  CONTENT_STATUS_LIST,
+} from "../constants/contentStatus.js";
 import { VISIBILITY, VISIBILITY_LIST } from "../constants/visibility.js";
 
 const playlistSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
       trim: true,
       maxlength: 100,
     },
+
+        slug: {
+  type: String,
+  unique: true,
+  required: true,
+  lowercase: true,
+  trim: true,
+  index: true,
+},
 
     description: {
       type: String,
@@ -43,6 +55,11 @@ const playlistSchema = new mongoose.Schema(
       default: VISIBILITY.PRIVATE,
     },
 
+    isCollaborative: {
+      type: Boolean,
+      default: false,
+    },
+
     isLikedPlaylist: {
       type: Boolean,
       default: false,
@@ -53,10 +70,12 @@ const playlistSchema = new mongoose.Schema(
       default: false,
     },
 
-    followers: {
-      type: Number,
-      default: 0,
-    },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
 
     playCount: {
       type: Number,
@@ -105,7 +124,7 @@ const playlistSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 /*
@@ -113,9 +132,8 @@ const playlistSchema = new mongoose.Schema(
 | Indexes
 |--------------------------------------------------------------------------
 */
-
 playlistSchema.index({
-  name: "text",
+  title: "text",
   description: "text",
 });
 
@@ -130,10 +148,18 @@ playlistSchema.index({
 playlistSchema.index({
   status: 1,
 });
+playlistSchema.index({
+  songs: 1,
+});
+playlistSchema.index({
+  followers: 1,
+});
 
-const Playlist = mongoose.model(
-  "Playlist",
-  playlistSchema
-);
+playlistSchema.index({
+  followers: -1,
+  playCount: -1,
+});
+
+const Playlist = mongoose.model("Playlist", playlistSchema);
 
 export default Playlist;

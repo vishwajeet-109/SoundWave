@@ -27,7 +27,9 @@ import { compressionMiddleware, hppMiddleware, performanceMiddleware } from "./m
 import { corsOptions, helmetOptions, performanceConfig } from "./config/security.js";
 import ApiError from "./utils/ApiError.js";
 import artistRoutes from "./routes/artists.js";
-
+import likeRoutes from "./routes/likeRoutes.js";
+import myLikesRoutes from "./routes/myLikesRoutes.js";
+import { myFollowingRouter } from "./routes/followRoutes.js";
 const app = express();
 
 /*
@@ -66,6 +68,11 @@ app.use("/api/me/notifications", notificationRoutes);
 app.use("/api/stream", playbackRoutes.progressRouter);
 app.use("/api/me/continue-listening", playbackRoutes.continueListeningRouter);
 app.use("/api/artists", artistRoutes);
+
+app.use("/api/songs/:songId/like", likeRoutes);
+
+app.use("/api/me/likes", myLikesRoutes);
+app.use("/api/me/following", myFollowingRouter);
 
 /*
 |--------------------------------------------------------------------------

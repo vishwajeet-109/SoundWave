@@ -8,11 +8,14 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand",
-    "test:coverage": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage"
+    "test:coverage": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "api:test": "node tests/runner.js",
+    "create:testusers": "node scripts/createTestUsers.js"
   },
   "dependencies": {
     "axios": "^1.19.0",
     "bcryptjs": "^3.0.3",
+    "chalk": "^5.6.2",
     "cloudinary": "^1.41.3",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
@@ -23,6 +26,7 @@
     "express-rate-limit": "^8.6.1",
     "express-slow-down": "^3.1.0",
     "express-validator": "^7.3.2",
+    "form-data": "^4.0.6",
     "helmet": "^8.3.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.3",
@@ -30,7 +34,9 @@
     "morgan": "^1.11.0",
     "multer": "^2.2.0",
     "multer-storage-cloudinary": "^4.0.0",
+    "ora": "^9.4.1",
     "socket.io": "^4.8.3",
+    "streamifier": "^0.1.1",
     "uuid": "^14.0.1"
   },
   "devDependencies": {

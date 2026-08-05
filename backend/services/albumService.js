@@ -19,40 +19,122 @@ const findOwnedAlbumOrThrow = async (albumId, user) => {
   return album;
 };
 
+
+
 const createAlbum = async ({ artistId, body }) => {
+  const slug = generateSlug(body.title);
+
+const exists = await Album.findOne({
+  slug,
+});
+
+if (exists) {
+  throw new ApiError(
+    409,
+    "Album title already exists."
+  );
+}
+
+console.log("Album Body:", {
+  title: body.title,
+  description: body.description,
+  genre: body.genre,
+  category: body.category,
+  language: body.language,
+});
+
   const album = await Album.create({
-    title: body.title,
-    slug: generateSlug(body.title),
-    artist: artistId,
-    description: body.description,
-    genre: body.genre || null,
-    category: body.category || null,
-    releaseDate: body.releaseDate || null,
-    visibility: body.visibility,
-  });
+
+  title: body.title,
+
+  slug,
+
+  artist: artistId,
+
+  description: body.description,
+
+  genre: body.genre || null,
+
+  category: body.category || null,
+
+  releaseDate: body.releaseDate || null,
+
+  visibility: body.visibility,
+
+});
   return album;
 };
 
+
+
 const updateAlbum = async ({ albumId, user, body }) => {
+
   const album = await findOwnedAlbumOrThrow(albumId, user);
 
-  const editableFields = ["title", "description", "genre", "category", "releaseDate", "visibility"];
+  const editableFields = [
+    "title",
+    "description",
+    "genre",
+    "category",
+    "releaseDate",
+    "visibility",
+  ];
+
   editableFields.forEach((field) => {
-    if (body[field] !== undefined) album[field] = body[field];
+    if (body[field] !== undefined) {
+      album[field] = body[field];
+    }
   });
 
-  if (body.title !== undefined && body.title !== album.title) {
-    album.slug = generateSlug(body.title);
+  if (body.title) {
+
+    const slug = generateSlug(body.title);
+
+    const exists = await Album.findOne({
+      slug,
+      _id: { $ne: albumId },
+    });
+
+    if (exists) {
+      throw new ApiError(
+        409,
+        "Album title already exists."
+      );
+    }
+
+    album.slug = slug;
   }
 
   await album.save();
+
   return album;
 };
 
 const deleteAlbum = async ({ albumId, user }) => {
-  const album = await findOwnedAlbumOrThrow(albumId, user);
+
+  const album = await findOwnedAlbumOrThrow(
+    albumId,
+    user
+  );
+
+  // Remove album reference from all songs
+  await Song.updateMany(
+    {
+      album: album._id
+    },
+    {
+      $set: {
+        album: null
+      }
+    }
+  );
+
   await album.deleteOne();
-  return { albumId };
+
+  return {
+    albumId
+  };
+
 };
 
 const getAlbumById = async (albumId) => {
@@ -104,27 +186,85 @@ const addSongToAlbum = async ({ albumId, songId, user }) => {
     throw new ApiError(409, "Song is already in this album.");
   }
 
-  album.songs.push(songId);
-  album.totalSongs = album.songs.length;
+ album.songs.push(songId);
 
-  const songs = await Song.find({ _id: { $in: album.songs } }).select("duration").lean();
-  album.totalDuration = songs.reduce((total, song) => total + (song.duration || 0), 0);
+song.album = album._id;
 
-  await album.save();
-  return album;
+await song.save();
+
+album.totalSongs = album.songs.length;
+
+const songs = await Song.find({
+    _id: { $in: album.songs }
+})
+.select("duration")
+.lean();
+
+album.totalDuration = songs.reduce(
+    (total, song) => total + (song.duration || 0),
+    0
+);
+
+await album.save();
+
+return album;
 };
 
-const removeSongFromAlbum = async ({ albumId, songId, user }) => {
-  const album = await findOwnedAlbumOrThrow(albumId, user);
+const removeSongFromAlbum = async ({
+  albumId,
+  songId,
+  user,
+}) => {
 
-  album.songs = album.songs.filter((id) => id.toString() !== songId);
+  const album = await findOwnedAlbumOrThrow(
+    albumId,
+    user
+  );
+
+  // Song album me hai ya nahi
+  if (
+    !album.songs.some(
+      (id) => id.toString() === songId
+    )
+  ) {
+    throw new ApiError(
+      404,
+      "Song not found in album."
+    );
+  }
+
+  // Song fetch karo
+  const song = await Song.findById(songId);
+
+  // Album se remove
+  album.songs = album.songs.filter(
+    (id) => id.toString() !== songId
+  );
+
+  // Song ka album reference bhi remove karo
+  if (song) {
+    song.album = null;
+    await song.save();
+  }
+
+  // Counters update
   album.totalSongs = album.songs.length;
 
-  const songs = await Song.find({ _id: { $in: album.songs } }).select("duration").lean();
-  album.totalDuration = songs.reduce((total, song) => total + (song.duration || 0), 0);
+  const songs = await Song.find({
+    _id: { $in: album.songs }
+  })
+    .select("duration")
+    .lean();
+
+  album.totalDuration = songs.reduce(
+    (total, song) => total + (song.duration || 0),
+    0
+  );
 
   await album.save();
+
   return album;
+
 };
 
 export default {

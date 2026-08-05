@@ -1,89 +1,91 @@
 import { Routes, Route } from "react-router-dom";
 
 import AppShell from "@/layouts/AppShell";
+
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import PublicRoute from "@/components/auth/PublicRoute";
+
+import Login from "@/features/auth/pages/Login";
+import Register from "@/features/auth/pages/Register";
+
 import Home from "@/features/home/pages/Home";
+import Search from "@/features/search/pages/Search";
 import AlbumDetails from "@/features/albums/pages/AlbumDetails";
 import ArtistDetails from "@/features/home/pages/ArtistDetails";
 import PlaylistDetails from "@/features/home/pages/PlaylistDetails";
 import LibraryPage from "@/features/home/pages/LibraryPage";
 import QueuePage from "@/features/home/pages/QueuePage";
 import ProfilePage from "@/features/home/pages/ProfilePage";
-import Search from "@/features/search/pages/Search";
 
 export default function AppRouter() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <AppShell>
-            <Home />
-          </AppShell>
-        }
-      />
 
-      <Route
-        path="/albums/:id"
-        element={
-          <AppShell>
-            <AlbumDetails />
-          </AppShell>
-        }
-      />
+      {/* Public Routes */}
 
-      <Route
-        path="/artists/:id"
-        element={
-          <AppShell>
-            <ArtistDetails />
-          </AppShell>
-        }
-      />
+      <Route element={<PublicRoute />}>
 
-      <Route
-        path="/playlists/:id"
-        element={
-          <AppShell>
-            <PlaylistDetails />
-          </AppShell>
-        }
-      />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-      <Route
-        path="/search"
-        element={
-          <AppShell>
-            <Search />
-          </AppShell>
-        }
-      />
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
-      <Route
-        path="/library"
-        element={
-          <AppShell>
-            <LibraryPage />
-          </AppShell>
-        }
-      />
+      </Route>
 
-      <Route
-        path="/queue"
-        element={
-          <AppShell>
-            <QueuePage />
-          </AppShell>
-        }
-      />
+      {/* Protected Routes */}
 
-      <Route
-        path="/profile"
-        element={
-          <AppShell>
-            <ProfilePage />
-          </AppShell>
-        }
-      />
+      <Route element={<ProtectedRoute />}>
+
+        <Route element={<AppShell />}>
+
+          <Route
+            index
+            element={<Home />}
+          />
+
+          <Route
+            path="search"
+            element={<Search />}
+          />
+
+          <Route
+            path="library"
+            element={<LibraryPage />}
+          />
+
+          <Route
+            path="queue"
+            element={<QueuePage />}
+          />
+
+          <Route
+            path="profile"
+            element={<ProfilePage />}
+          />
+
+          <Route
+            path="albums/:id"
+            element={<AlbumDetails />}
+          />
+
+          <Route
+            path="artists/:id"
+            element={<ArtistDetails />}
+          />
+
+          <Route
+            path="playlists/:id"
+            element={<PlaylistDetails />}
+          />
+
+        </Route>
+
+      </Route>
 
       <Route
         path="*"
@@ -93,6 +95,7 @@ export default function AppRouter() {
           </div>
         }
       />
+
     </Routes>
   );
 }

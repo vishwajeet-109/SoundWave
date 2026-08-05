@@ -140,10 +140,16 @@ const albumSchema = new mongoose.Schema(
 |--------------------------------------------------------------------------
 */
 
-albumSchema.index({
-  title: "text",
-  description: "text",
-});
+albumSchema.index(
+  {
+    title: "text",
+    description: "text",
+  },
+  {
+    default_language: "none",
+    language_override: "none",
+  }
+);
 
 albumSchema.index({
   artist: 1,

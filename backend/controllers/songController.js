@@ -12,31 +12,33 @@ class SongController {
     |--------------------------------------------------------------------------
     */
 
-    createSong = asyncHandler(async (req, res) => {
+ createSong = asyncHandler(async (req, res) => {
 
-        const song = await songService.createSong(
+    const song = await songService.createSong(
 
-            req.user._id,
+        req.user._id,
 
-            req.body
+        req.body,
 
-        );
+        req.files
 
-        res.status(201).json(
+    );
 
-            new ApiResponse(
+    res.status(201).json(
 
-                201,
+        new ApiResponse(
 
-                "Song uploaded successfully",
+            201,
 
-                song
+            "Song uploaded successfully",
 
-            )
+            song
 
-        );
+        )
 
-    });
+    );
+
+});
 
     /*
     |--------------------------------------------------------------------------

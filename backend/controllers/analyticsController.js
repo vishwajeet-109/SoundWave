@@ -10,7 +10,12 @@ export const getDashboardOverview = asyncHandler(async (req, res) => {
 });
 
 export const getTopArtists = asyncHandler(async (req, res) => {
-  const limit = Math.min(parseInt(req.query.limit, 10) || 10, 50);
+const parsed = Number(req.query.limit);
+
+const limit =
+  Number.isFinite(parsed) && parsed > 0
+    ? Math.min(Math.floor(parsed), 50)
+    : 10;
   const items = await analyticsService.getTopArtists({ limit });
   res.status(200).json(new ApiResponse(200, "Top artists fetched successfully.", { items }));
 });

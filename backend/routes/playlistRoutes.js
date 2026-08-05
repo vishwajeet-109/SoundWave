@@ -40,11 +40,11 @@ router.get(
 
 router.get(
   "/:playlistId",
+  authMiddleware,
   playlistIdParamValidator,
   validateRequest,
   getPlaylistById
 );
-
 /*
 |--------------------------------------------------------------------------
 | Protected Routes

@@ -1,26 +1,44 @@
-import Sidebar from "../Sidebar";
-import Topbar from "../Topbar";
-import MainContent from "../Main";
-import PlayerBar from "../Player";
+import { Outlet } from "react-router-dom";
 
-export default function AppShell({ children }) {
-  return (
-    <div className="flex h-screen bg-zinc-950 text-white">
+import Sidebar from "@/components/layout/Sidebar/Sidebar";
+import Header from "@/components/layout/Header";
+import RightSidebar from "@/components/layout/RightSidebar";
+import MusicPlayer from "@/components/player/MusicPlayer";
 
-      <Sidebar />
+import useAuth from "@/hooks/useAuth";
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+export default function AppShell() {
 
-        <Topbar />
+    const { user } = useAuth();
 
-        <MainContent>
-          {children}
-        </MainContent>
+    return (
 
-      </div>
+        <div className="flex h-screen bg-background text-white">
 
-      <PlayerBar />
+            <Sidebar
+                role={user?.role}
+            />
 
-    </div>
-  );
+            <div className="flex flex-1 flex-col overflow-hidden">
+
+                <Header />
+
+                <main className="flex-1 overflow-y-auto bg-background px-6 py-5">
+  <Outlet />
+</main>
+
+                  
+
+                <MusicPlayer />
+
+            </div>
+
+            <div className="hidden 2xl:block">
+  <RightSidebar />
+</div>
+
+        </div>
+
+    );
+
 }

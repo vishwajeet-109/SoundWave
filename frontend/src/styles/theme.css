@@ -1,84 +1,31 @@
 @theme {
-  /* ===========================
-     COLORS
-  =========================== */
 
-  --color-primary: #1db954;
-  --color-primary-hover: #1ed760;
+  /* Colors */
 
-  --color-background: #09090b;
-  --color-surface: #111111;
-  --color-surface-secondary: #18181b;
+  --color-background: #080808;
+  --color-secondary: #111111;
+  --color-card: #171717;
+  --color-border: #2A2A2A;
 
-  --color-text: #fafafa;
-  --color-text-secondary: #a1a1aa;
+  --color-primary: #22C55E;
+  --color-accent: #3B82F6;
 
-  --color-border: #27272a;
+  --color-text: #FAFAFA;
+  --color-muted: #A1A1AA;
 
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
 
-  /* ===========================
-     RADIUS
-  =========================== */
+  /* Radius */
 
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
   --radius-xl: 24px;
-  --radius-2xl: 32px;
 
-  /* ===========================
-     SHADOWS
-  =========================== */
+  /* Shadows */
 
-  --shadow-sm: 0 2px 8px rgb(0 0 0 / 0.15);
-  --shadow-md: 0 8px 24px rgb(0 0 0 / 0.25);
-  --shadow-lg: 0 16px 48px rgb(0 0 0 / 0.35);
+  --shadow-card: 0 16px 40px rgba(0,0,0,.25);
 
-  /* ===========================
-     TYPOGRAPHY
-  =========================== */
-
-  --font-sans:
-    "Inter",
-    system-ui,
-    sans-serif;
-
-  /* ===========================
-     PLAYER
-  =========================== */
-
-  --player-height: 96px;
-
-  /* ===========================
-     SIDEBAR
-  =========================== */
-
-  --sidebar-width: 280px;
-  --sidebar-collapsed-width: 92px;
-
-  /* ===========================
-     TRANSITIONS
-  =========================== */
-
-  --ease-default: cubic-bezier(.22,1,.36,1);
-
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 400ms;
-}
-
-@keyframes music {
-  0%,
-  100% {
-    transform: scaleY(0.4);
-  }
-
-  50% {
-    transform: scaleY(1);
-  }
 }

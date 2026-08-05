@@ -30,16 +30,25 @@ const songSchema = new mongoose.Schema(
       default: null,
     },
 
-    coverImage: {
-      type: String,
-      default: "",
-    },
+coverImage: {
+  type: String,
+  default: "",
+},
 
-    audioFile: {
-      type: String,
-      required: true,
-    },
+coverImagePublicId: {
+  type: String,
+  default: "",
+},
 
+audioFile: {
+  type: String,
+  required: true,
+},
+
+audioFilePublicId: {
+  type: String,
+  default: "",
+},
     duration: {
       type: Number,
       default: 0,
@@ -195,7 +204,8 @@ songSchema.index(
     tags: "text",
   },
   {
-    language_override: "mongoLanguage",
+    default_language: "none",
+    language_override: "none",
   }
 );
 

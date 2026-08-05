@@ -32,31 +32,99 @@ const findEditablePlaylistOrThrow = async (playlistId, user) => {
 };
 
 const createPlaylist = async ({ ownerId, body }) => {
-  const playlist = await Playlist.create({
-    title: body.title,
-    slug: generateSlug(body.title),
-    owner: ownerId,
-    description: body.description,
-    visibility: body.visibility || VISIBILITY.PRIVATE,
-    isCollaborative: !!body.isCollaborative,
+
+  const slug = generateSlug(body.title);
+
+  const exists = await Playlist.findOne({
+    slug,
   });
+
+  if (exists) {
+    throw new ApiError(
+      409,
+      "Playlist title already exists."
+    );
+  }
+
+  const playlist = await Playlist.create({
+
+    title: body.title,
+
+    slug,
+
+    owner: ownerId,
+
+    description: body.description,
+
+    visibility:
+      body.visibility || VISIBILITY.PRIVATE,
+
+    isCollaborative:
+      !!body.isCollaborative,
+
+  });
+
   return playlist;
+
 };
 
 const updatePlaylist = async ({ playlistId, user, body }) => {
+
   const playlist = await Playlist.findById(playlistId);
-  if (!playlist) throw new ApiError(404, "Playlist not found.");
-  if (playlist.owner.toString() !== user._id.toString()) {
-    throw new ApiError(403, "Only the owner can update playlist settings.");
+
+  if (!playlist) {
+    throw new ApiError(404, "Playlist not found.");
   }
 
-  const editableFields = ["title", "description", "visibility", "isCollaborative"];
+  if (playlist.owner.toString() !== user._id.toString()) {
+    throw new ApiError(
+      403,
+      "Only the owner can update playlist settings."
+    );
+  }
+
+  // Prevent duplicate title
+  if (body.title) {
+
+    const slug = generateSlug(body.title);
+
+    const exists = await Playlist.findOne({
+      slug,
+      _id: { $ne: playlistId }
+    });
+
+    if (exists) {
+      throw new ApiError(
+        409,
+        "Playlist title already exists."
+      );
+    }
+
+  }
+
+  const editableFields = [
+    "title",
+    "description",
+    "visibility",
+    "isCollaborative"
+  ];
+
   editableFields.forEach((field) => {
-    if (body[field] !== undefined) playlist[field] = body[field];
+
+    if (body[field] !== undefined) {
+      playlist[field] = body[field];
+    }
+
   });
 
+  if (body.title) {
+    playlist.slug = generateSlug(body.title);
+  }
+
   await playlist.save();
+
   return playlist;
+
 };
 
 const deletePlaylist = async ({ playlistId, user }) => {
@@ -148,41 +216,128 @@ const addSongToPlaylist = async ({ playlistId, songId, user }) => {
   }
 
   playlist.songs.push(songId);
-  await playlist.save();
-  return playlist;
+
+playlist.totalSongs = playlist.songs.length;
+
+playlist.totalDuration += song.duration || 0;
+
+await playlist.save();
+
+return playlist;
 };
 
-const removeSongFromPlaylist = async ({ playlistId, songId, user }) => {
-  const playlist = await findEditablePlaylistOrThrow(playlistId, user);
-  playlist.songs = playlist.songs.filter((id) => id.toString() !== songId);
+const removeSongFromPlaylist = async ({
+  playlistId,
+  songId,
+  user,
+}) => {
+
+  const playlist = await findEditablePlaylistOrThrow(
+    playlistId,
+    user
+  );
+
+  if (
+    !playlist.songs.some(
+      (id) => id.toString() === songId
+    )
+  ) {
+    throw new ApiError(
+      404,
+      "Song not found in playlist."
+    );
+  }
+
+  const song = await Song.findById(songId);
+
+  playlist.songs = playlist.songs.filter(
+    (id) => id.toString() !== songId
+  );
+
+  playlist.totalSongs = playlist.songs.length;
+
+  if (song) {
+    playlist.totalDuration = Math.max(
+      0,
+      playlist.totalDuration - (song.duration || 0)
+    );
+  }
+
   await playlist.save();
+
   return playlist;
+
 };
 
 const followPlaylist = async ({ playlistId, user }) => {
-  const playlist = await findAccessiblePlaylistOrThrow(playlistId, user);
 
-  if (playlist.owner.toString() === user._id.toString()) {
-    throw new ApiError(400, "You already own this playlist.");
+  const playlist = await findAccessiblePlaylistOrThrow(
+    playlistId,
+    user
+  );
+
+  if (
+    playlist.owner.toString() === user._id.toString()
+  ) {
+    throw new ApiError(
+      400,
+      "You cannot follow your own playlist."
+    );
   }
-  if (playlist.followers.some((id) => id.toString() === user._id.toString())) {
-    throw new ApiError(409, "You already follow this playlist.");
+
+  const alreadyFollowing = playlist.followers.some(
+    (id) => id.toString() === user._id.toString()
+  );
+
+  if (alreadyFollowing) {
+    throw new ApiError(
+      409,
+      "You already follow this playlist."
+    );
   }
 
   playlist.followers.push(user._id);
-  await playlist.save();
-  return playlist;
-};
 
-const unfollowPlaylist = async ({ playlistId, user }) => {
-  const playlist = await Playlist.findById(playlistId);
-  if (!playlist) throw new ApiError(404, "Playlist not found.");
+  await playlist.save();
+
+  return playlist;
+
+};
+const unfollowPlaylist = async ({
+  playlistId,
+  user,
+}) => {
+
+  const playlist = await Playlist.findById(
+    playlistId
+  );
+
+  if (!playlist) {
+    throw new ApiError(
+      404,
+      "Playlist not found."
+    );
+  }
+
+  const alreadyFollowing = playlist.followers.some(
+    (id) => id.toString() === user._id.toString()
+  );
+
+  if (!alreadyFollowing) {
+    throw new ApiError(
+      409,
+      "You are not following this playlist."
+    );
+  }
 
   playlist.followers = playlist.followers.filter(
     (id) => id.toString() !== user._id.toString()
   );
+
   await playlist.save();
+
   return playlist;
+
 };
 
 export default {

@@ -48,8 +48,18 @@ const getDashboardOverview = async () => {
  * songs — a single aggregation instead of N per-artist queries.
  */
 const getTopArtists = async ({ limit = 10 } = {}) => {
+
+  let safeLimit = Number(limit);
+
+  if (!Number.isFinite(safeLimit) || safeLimit <= 0) {
+    safeLimit = 10;
+  }
+
+  safeLimit = Math.min(Math.floor(safeLimit), 50);
+
   return Song.aggregate([
     { $match: { status: SONG_STATUS.APPROVED } },
+
     {
       $group: {
         _id: "$artist",
@@ -58,8 +68,11 @@ const getTopArtists = async ({ limit = 10 } = {}) => {
         songCount: { $sum: 1 },
       },
     },
+
     { $sort: { totalPlays: -1 } },
-    { $limit: limit },
+
+    { $limit: safeLimit },
+
     {
       $lookup: {
         from: "users",
@@ -68,7 +81,9 @@ const getTopArtists = async ({ limit = 10 } = {}) => {
         as: "artist",
       },
     },
+
     { $unwind: "$artist" },
+
     {
       $project: {
         _id: 0,

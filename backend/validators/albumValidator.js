@@ -15,10 +15,28 @@ export const createAlbumValidator = [
     .isString()
     .trim()
     .isLength({ min: 1, max: 150 }),
-  body("description").optional().isString().trim().isLength({ max: 1000 }),
-  body("genre").optional().custom(isValidObjectId).withMessage("Invalid genre ID."),
-  body("category").optional().custom(isValidObjectId).withMessage("Invalid category ID."),
-  body("releaseDate").optional().isISO8601().withMessage("Invalid release date."),
+
+  body("description")
+    .optional()
+    .isString()
+    .trim()
+    .isLength({ max: 1000 }),
+
+  body("genre")
+    .optional()
+    .isString()
+    .trim(),
+
+  body("category")
+    .optional()
+    .isString()
+    .trim(),
+
+  body("releaseDate")
+    .optional()
+    .isISO8601()
+    .withMessage("Invalid release date."),
+
   body("visibility")
     .optional()
     .isIn(Object.values(VISIBILITY))
@@ -27,17 +45,39 @@ export const createAlbumValidator = [
 
 export const updateAlbumValidator = [
   ...albumIdParamValidator,
-  body("title").optional().isString().trim().isLength({ min: 1, max: 150 }),
-  body("description").optional().isString().trim().isLength({ max: 1000 }),
-  body("genre").optional().custom(isValidObjectId).withMessage("Invalid genre ID."),
-  body("category").optional().custom(isValidObjectId).withMessage("Invalid category ID."),
-  body("releaseDate").optional().isISO8601().withMessage("Invalid release date."),
+
+  body("title")
+    .optional()
+    .isString()
+    .trim()
+    .isLength({ min: 1, max: 150 }),
+
+  body("description")
+    .optional()
+    .isString()
+    .trim()
+    .isLength({ max: 1000 }),
+
+  body("genre")
+    .optional()
+    .isString()
+    .trim(),
+
+  body("category")
+    .optional()
+    .isString()
+    .trim(),
+
+  body("releaseDate")
+    .optional()
+    .isISO8601()
+    .withMessage("Invalid release date."),
+
   body("visibility")
     .optional()
     .isIn(Object.values(VISIBILITY))
     .withMessage("Invalid visibility value."),
 ];
-
 export const albumSongMutationValidator = [
   ...albumIdParamValidator,
   body("songId").custom(isValidObjectId).withMessage("Invalid song ID."),

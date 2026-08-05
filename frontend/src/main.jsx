@@ -6,7 +6,9 @@ import AppRouter from "./app/router/AppRouter";
 import AppProviders from "./app/providers/AppProviders";
 import { AuthProvider } from "./context/AuthContext";
 import { PlayerProvider } from "./context/PlayerContext";
-
+import "./styles/globals.css";
+import "./styles/scrollbar.css";
+import "./styles/animations.css";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
