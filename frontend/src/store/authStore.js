@@ -1,89 +1,162 @@
 import { create } from "zustand";
+
 import authService from "@/services/authService";
 import { storage } from "@/utils/storage";
 
 const useAuthStore = create((set, get) => ({
-
   user: storage.getUser(),
-
   accessToken: storage.getToken(),
 
   loading: false,
-
   initialized: false,
 
   isAuthenticated: !!storage.getToken(),
 
-  login: async (credentials) => {
+  // ======================
+  // LOGIN
+  // ======================
 
+  login: async (credentials) => {
     set({ loading: true });
 
     try {
-
       const response = await authService.login(credentials);
 
       const { accessToken, user } = response.data.data;
 
       storage.setToken(accessToken);
+      storage.setUser(user);
+
+      set({
+        user,
+        accessToken,
+        isAuthenticated: true,
+        initialized: true,
+        loading: false,
+      });
+
+      return response.data;
+    } catch (error) {
+      set({
+        loading: false,
+      });
+
+      throw error;
+    }
+  },
+
+  // ======================
+  // REGISTER
+  // ======================
+
+  register: async (data) => {
+    set({ loading: true });
+
+    try {
+      const response = await authService.register(data);
+
+      set({
+        loading: false,
+      });
+
+      return response.data;
+    } catch (error) {
+      set({
+        loading: false,
+      });
+
+      throw error;
+    }
+  },
+
+  // ======================
+  // FETCH CURRENT USER
+  // ======================
+
+  fetchCurrentUser: async () => {
+    try {
+      const response = await authService.getMe();
+
+      const user = response.data.data;
 
       storage.setUser(user);
 
       set({
-  user,
-  accessToken,
-  initialized: true,
-  isAuthenticated: true,
-  loading: false,
-});
+        user,
+        initialized: true,
+        isAuthenticated: true,
+      });
 
-      return response.data;
-
+      return user;
     } catch (error) {
+      storage.clear();
 
       set({
-
-        loading: false,
-
+        user: null,
+        accessToken: null,
+        initialized: true,
+        isAuthenticated: false,
       });
 
       throw error;
-
     }
-
   },
 
-  fetchCurrentUser: async () => {
+  // ======================
+  // INITIALIZE APP
+  // ======================
 
-  try {
+  initialize: async () => {
+    const token = storage.getToken();
 
-    const response = await authService.getMe();
+    if (!token) {
+      set({
+        initialized: true,
+        isAuthenticated: false,
+      });
 
-    const user = response.data.data;
+      return;
+    }
 
-    storage.setUser(user);
+    try {
+      await get().fetchCurrentUser();
+    } catch {
+      // handled in fetchCurrentUser
+    }
+  },
 
-    set({
-      user,
-      initialized: true,
-      isAuthenticated: true,
-    });
+  // ======================
+  // LOGOUT
+  // ======================
 
-  } catch {
+  logout: async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // Ignore logout API failure
+    }
 
     storage.clear();
 
     set({
       user: null,
       accessToken: null,
-      initialized: true,
       isAuthenticated: false,
+      initialized: true,
     });
+  },
 
-  }
+  // ======================
+  // UPDATE USER
+  // ======================
 
-},
+  updateUser: (user) => {
+    storage.setUser(user);
 
-
-});
+    set({
+      user,
+    });
+  },
+}));
 
 export default useAuthStore;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { storage } from "@/utils/storage";
 
-const token = storage.getToken();
+
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -12,18 +12,15 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
+api.interceptors.request.use((config) => {
+  const token = storage.getToken();
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,
