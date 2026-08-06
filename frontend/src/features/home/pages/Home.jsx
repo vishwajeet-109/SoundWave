@@ -16,6 +16,8 @@ import {
   ErrorMessage,
 } from "@/shared/ui";
 
+import { usePlayerContext } from "@/context/PlayerContext";
+
 export default function Home() {
   const {
     songs,
@@ -29,6 +31,8 @@ export default function Home() {
 
     refetch,
   } = useHome();
+
+  const { playSong } = usePlayerContext();
 
   if (isLoading) {
     return (
@@ -69,15 +73,19 @@ export default function Home() {
         featured={songs[0]}
       />
 
-        <QuickAccess
-          songs={songs}
-     />
+      <QuickAccess
+        songs={songs}
+        onPlay={playSong}
+      />
+
       <RecentlyPlayed
         songs={history}
+        onPlay={playSong}
       />
 
       <TrendingSongs
         songs={songs}
+        onPlay={playSong}
       />
 
       <PopularArtists
@@ -95,9 +103,11 @@ export default function Home() {
       <FeaturedPlaylists
         playlists={playlists}
       />
+
       <ContinueListening
-            songs={history}
-          />
+        songs={history}
+        onPlay={playSong}
+      />
 
     </div>
   );

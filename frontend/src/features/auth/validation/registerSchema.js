@@ -5,21 +5,26 @@ export const registerSchema = z
     name: z
       .string()
       .trim()
-      .min(3, "Name must be at least 3 characters"),
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name cannot exceed 50 characters"),
 
     email: z
       .string()
       .trim()
-      .email("Enter a valid email"),
+      .email("Please enter a valid email"),
 
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters"),
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+        "Password must contain uppercase, lowercase and a number"
+      ),
 
     confirmPassword: z
-      .string(),
+      .string()
+      .min(8, "Confirm your password"),
   })
-
   .refine(
     (data) => data.password === data.confirmPassword,
     {

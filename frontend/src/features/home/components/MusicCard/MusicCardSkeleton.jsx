@@ -2,12 +2,26 @@ import { Skeleton } from "@/shared/ui";
 
 export default function MusicCardSkeleton() {
   return (
-    <div>
-      <Skeleton className="aspect-square w-full rounded-2xl" />
+    <div className="overflow-hidden rounded-[26px] border border-zinc-800 bg-[#171717]">
 
-      <Skeleton className="mt-4 h-5 w-3/4" />
+      <Skeleton className="aspect-square w-full" />
 
-      <Skeleton className="mt-2 h-4 w-1/2" />
+      <div className="space-y-3 p-5">
+
+        <Skeleton className="h-5 w-3/4" />
+
+        <Skeleton className="h-4 w-1/2" />
+
+        <div className="flex items-center justify-between pt-2">
+
+          <Skeleton className="h-4 w-12" />
+
+          <Skeleton className="h-7 w-20 rounded-full" />
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

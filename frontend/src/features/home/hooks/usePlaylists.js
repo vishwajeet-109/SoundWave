@@ -1,10 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getPlaylists } from "../api/homeApi";
+import playlistService from "@/services/playlistService";
 
-export function usePlaylists() {
+export function usePlaylists(params = {}) {
   return useQuery({
-    queryKey: ["home", "playlists"],
-    queryFn: () => getPlaylists(),
+    queryKey: ["playlists", params],
+
+    queryFn: async () => {
+      const { data } = await playlistService.getAll(params);
+
+      return data.data;
+    },
+
+    staleTime: 1000 * 60 * 5,
   });
 }

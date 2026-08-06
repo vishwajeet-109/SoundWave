@@ -1,4 +1,6 @@
-import ArtistCard from "./ArtistCard";
+import ArtistCard, {
+  ArtistCardSkeleton,
+} from "./ArtistCard";
 import SectionHeader from "./SectionHeader";
 
 export default function PopularArtists({
@@ -8,19 +10,18 @@ export default function PopularArtists({
 }) {
   return (
     <section className="mt-14">
+
       <SectionHeader
         title="Popular Artists"
         href="/artists"
       />
 
       <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-6">
+
         {loading ? (
           Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-64 animate-pulse rounded-2xl bg-zinc-800"
-            />
-          ))
+  <ArtistCardSkeleton key={index} />
+))
         ) : artists.length > 0 ? (
           artists.map((artist) => (
             <ArtistCard
@@ -34,7 +35,9 @@ export default function PopularArtists({
             No artists available.
           </div>
         )}
+
       </div>
+
     </section>
   );
 }

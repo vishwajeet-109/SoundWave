@@ -1,4 +1,15 @@
-import { Play } from "lucide-react";
+import {
+  memo,
+  useCallback,
+  useMemo,
+} from "react";
+
+import {
+  Play,
+  BadgeCheck,
+  Users,
+} from "lucide-react";
+
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -7,91 +18,273 @@ import { Card } from "@/shared/ui";
 const PLACEHOLDER =
   "https://placehold.co/500x500/18181b/ffffff?text=Artist";
 
-export default function ArtistCard({
-  artist = {},
+function ArtistCard({
+  artist,
   onPlay,
 }) {
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    if (artist?._id) {
-      navigate(`/artists/${artist._id}`);
+  if (!artist) return null;
+
+  const image = useMemo(
+    () =>
+      artist.image ||
+      artist.avatar ||
+      artist.profileImage ||
+      PLACEHOLDER,
+    [artist]
+  );
+
+  const artistName = useMemo(
+    () =>
+      artist.name ||
+      "Unknown Artist",
+    [artist]
+  );
+
+  const monthlyListeners = useMemo(() => {
+    if (artist.monthlyListeners) {
+      return artist.monthlyListeners;
     }
-  };
 
-  const handlePlay = (event) => {
-    event.stopPropagation();
-    onPlay?.(artist);
-  };
+    return null;
+  }, [artist]);
 
-  const image =
-    artist.image ||
-    artist.avatar ||
-    artist.profileImage ||
-    PLACEHOLDER;
+  const followers = useMemo(() => {
+    if (artist.followers) {
+      return artist.followers;
+    }
 
-  const name =
-    artist.name ||
-    artist.artistName ||
-    "Unknown Artist";
+    return null;
+  }, [artist]);
+
+  const handleNavigate =
+    useCallback(() => {
+      navigate(`/artists/${artist._id}`);
+    }, [artist, navigate]);
+
+  const handlePlay =
+    useCallback(
+      (e) => {
+        e.stopPropagation();
+
+        // ==========================
+        // FUTURE
+        // --------------------------
+        // Play artist's top songs
+        // Queue artist catalog
+        // ==========================
+
+        onPlay?.(artist);
+      },
+      [artist, onPlay]
+    );
 
   return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.25 }}
+    <motion.article
+      whileHover={{
+        y: -8,
+      }}
+      transition={{
+        duration: 0.25,
+      }}
       onClick={handleNavigate}
       className="cursor-pointer"
     >
       <Card
+        padding="none"
         variant="interactive"
-        className="group text-center"
+        className="
+          group
+          overflow-hidden
+          rounded-[28px]
+          bg-[#171717]
+        "
       >
-        <div className="relative">
-          <img
-            src={image}
-            alt={name}
-            onError={(e) => {
-              e.currentTarget.src = PLACEHOLDER;
-            }}
-            className="aspect-square w-full rounded-full object-cover transition duration-500 group-hover:scale-105"
+
+        {/* ==========================
+            FUTURE
+            --------------------------
+            Verified Artist Glow
+            Dynamic Background
+            ========================== */}
+
+        <div className="relative flex justify-center pt-8">
+
+          <div
+            className="
+              absolute
+              h-40
+              w-40
+              rounded-full
+              bg-green-500/10
+              blur-3xl
+              opacity-0
+              transition
+              duration-500
+              group-hover:opacity-100
+            "
           />
 
-          <button
+          <img
+            src={image}
+            alt={artistName}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src =
+                PLACEHOLDER;
+            }}
+            className="
+              relative
+              h-40
+              w-40
+              rounded-full
+              object-cover
+              ring-4
+              ring-zinc-800
+              transition-transform
+              duration-700
+              group-hover:scale-105
+            "
+          />
+
+          <motion.button
+            whileTap={{
+              scale: 0.92,
+            }}
             type="button"
             onClick={handlePlay}
             className="
               absolute
-              bottom-3
-              right-3
+              bottom-2
+              right-10
               flex
-              h-12
-              w-12
-              translate-y-3
+              h-14
+              w-14
+              translate-y-5
               items-center
               justify-center
               rounded-full
-              bg-primary
+              bg-[#22C55E]
               text-black
               opacity-0
+              shadow-xl
               transition-all
+              duration-300
               group-hover:translate-y-0
               group-hover:opacity-100
-            >
-              <Play
-                size={20}
-                fill="currentColor"
-              />
-          </button>
+            "
+          >
+            <Play
+              size={22}
+              fill="currentColor"
+            />
+          </motion.button>
+
         </div>
 
-        <h3 className="mt-4 line-clamp-1 font-semibold text-white">
-          {name}
-        </h3>
+        <div className="space-y-3 p-6">
 
-        <p className="mt-1 text-sm text-zinc-400">
-          Artist
-        </p>
+          <div className="flex items-center justify-center gap-2">
+
+            <h3
+              className="
+                line-clamp-1
+                text-center
+                text-xl
+                font-bold
+                text-white
+              "
+            >
+              {artistName}
+            </h3>
+
+            {artist.verified && (
+              <BadgeCheck
+                size={18}
+                className="text-sky-500"
+              />
+            )}
+
+          </div>
+                    {monthlyListeners && (
+            <div
+              className="
+                flex
+                items-center
+                justify-center
+                gap-2
+                text-sm
+                text-zinc-400
+              "
+            >
+              <Users
+                size={16}
+                className="text-green-500"
+              />
+
+              <span>
+                {monthlyListeners.toLocaleString()}
+                {" "}
+                Monthly Listeners
+              </span>
+
+            </div>
+          )}
+
+          {followers && (
+            <p
+              className="
+                text-center
+                text-xs
+                text-zinc-500
+              "
+            >
+              {followers.toLocaleString()}
+              {" "}
+              Followers
+            </p>
+          )}
+
+          <div className="flex justify-center">
+
+            <span
+              className="
+                rounded-full
+                border
+                border-green-500/20
+                bg-green-500/10
+                px-3
+                py-1
+                text-xs
+                font-medium
+                text-green-400
+              "
+            >
+              Artist
+            </span>
+
+          </div>
+
+          {/* ==========================
+              FUTURE
+              --------------------------
+              □ Follow Artist
+              □ Artist Bio
+              □ Popular Songs Preview
+              □ Albums Count
+              □ Verified Animation
+              □ Context Menu
+              □ Share Artist
+              ========================== */}
+
+        </div>
+
       </Card>
-    </motion.div>
+
+    </motion.article>
   );
 }
+
+export default memo(ArtistCard);

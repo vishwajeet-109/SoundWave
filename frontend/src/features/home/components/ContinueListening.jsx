@@ -1,6 +1,7 @@
 import SectionHeader from "./SectionHeader";
-import MusicCard from "./MusicCard";
-import { MusicCardSkeleton } from "./MusicCard";
+import MusicCard, {
+  MusicCardSkeleton,
+} from "./MusicCard";
 
 export default function ContinueListening({
   songs = [],
@@ -11,27 +12,41 @@ export default function ContinueListening({
     <section className="mt-14">
       <SectionHeader
         title="Continue Listening"
+        subtitle="Resume where you left off"
+        href="/history"
       />
 
-      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-        {loading ? (
-          Array.from({ length: 6 }).map((_, index) => (
+      {loading ? (
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, index) => (
             <MusicCardSkeleton key={index} />
-          ))
-        ) : songs.length > 0 ? (
-          songs.map((song) => (
-            <MusicCard
-              key={song._id}
-              song={song}
-              onPlay={onPlay}
-            />
-          ))
-        ) : (
-          <div className="col-span-full rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center text-zinc-400">
-            Nothing to continue listening.
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : songs.length > 0 ? (
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+          {songs.slice(0, 6).map((song) => {
+            console.log("Song =", song);
+            return (
+              <MusicCard
+                key={song._id}
+                song={song}
+                playlist={songs}
+                onPlay={onPlay}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex h-40 flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900">
+          <h3 className="text-lg font-semibold text-white">
+            Nothing to continue
+          </h3>
+
+          <p className="mt-2 text-sm text-zinc-500">
+            Play some songs and they'll appear here.
+          </p>
+        </div>
+      )}
     </section>
   );
 }

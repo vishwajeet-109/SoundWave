@@ -6,17 +6,18 @@ import SearchTabs from "../components/SearchTabs";
 import TrendingSearches from "../components/TrendingSearches";
 import RecentSearches from "../components/RecentSearches";
 
+import SearchSection from "../components/SearchSection";
 import ResultGrid from "../components/ResultGrid";
 import SongResultCard from "../components/SongResultCard";
 import EmptySearch from "../components/EmptySearch";
 import SearchSkeleton from "../components/SearchSkeleton";
+import TopResult from "../components/TopResult";
 
-import MusicCard from "@/features/home/components/MusicCard";
+import AlbumCard from "@/features/home/components/AlbumCard";
 import ArtistCard from "@/features/home/components/ArtistCard";
 import PlaylistCard from "@/features/home/components/PlaylistCard";
 
 import { useSearch } from "../hooks/useSearch";
-
 import useDebounce from "@/shared/hooks/useDebounce";
 
 import {
@@ -31,19 +32,42 @@ export default function Search() {
 
   const [recent, setRecent] = useState([]);
 
-  const debouncedQuery = useDebounce(query, 300);
+  const debouncedQuery = useDebounce(
+    query,
+    300
+  );
+
+  /*
+  |--------------------------------------------------------------------------
+  | Recent Searches
+  |--------------------------------------------------------------------------
+  */
 
   useEffect(() => {
-    setRecent(getRecentSearches());
+    setRecent(
+      getRecentSearches()
+    );
   }, []);
 
   useEffect(() => {
-    if (!debouncedQuery.trim()) return;
+    if (!debouncedQuery.trim()) {
+      return;
+    }
 
-    saveRecentSearch(debouncedQuery);
+    saveRecentSearch(
+      debouncedQuery
+    );
 
-    setRecent(getRecentSearches());
+    setRecent(
+      getRecentSearches()
+    );
   }, [debouncedQuery]);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Search Query
+  |--------------------------------------------------------------------------
+  */
 
   const {
     data,
@@ -51,30 +75,56 @@ export default function Search() {
     isError,
   } = useSearch({
     q: debouncedQuery,
+
     type:
       tab === "All"
         ? undefined
         : tab.toLowerCase(),
   });
 
+  /*
+  |--------------------------------------------------------------------------
+  | Search Results
+  |--------------------------------------------------------------------------
+  */
+
   const results = useMemo(() => {
     return data?.data || {};
   }, [data]);
 
+  /*
+  |--------------------------------------------------------------------------
+  | Loading
+  |--------------------------------------------------------------------------
+  */
+
   if (isLoading) {
-    return (
-      <SearchLayout>
-        <SearchSkeleton />
-      </SearchLayout>
-    );
+    return <SearchSkeleton />;
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Error
+  |--------------------------------------------------------------------------
+  */
 
   if (isError) {
     return (
       <SearchLayout>
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-8 text-red-400">
-          Failed to load search results.
+
+        <div
+          className="
+            flex
+            h-72
+            items-center
+            justify-center
+          "
+        >
+          <p className="text-red-500">
+            Failed to load search results.
+          </p>
         </div>
+
       </SearchLayout>
     );
   }
@@ -82,20 +132,33 @@ export default function Search() {
   return (
     <SearchLayout>
 
+      {/* ======================================================
+          Search Input
+      ====================================================== */}
+
       <SearchInput
+        value={query}
+        onChange={(e) =>
+          setQuery(
+            e.target.value
+          )
+        }
+        onClear={() =>
+          setQuery("")
+        }
+      />
 
-value={query}
-
-onChange={(e)=>setQuery(e.target.value)}
-
-onClear={()=>setQuery("")}
-
-/>
+      {/* ======================================================
+          Search Tabs
+      ====================================================== */}
 
       <SearchTabs
         active={tab}
         onChange={setTab}
       />
+            {/* ======================================================
+          Default Search Screen
+      ====================================================== */}
 
       {!query && (
         <>
@@ -117,46 +180,148 @@ onClear={()=>setQuery("")}
         </>
       )}
 
+      {/* ======================================================
+          Search Results
+      ====================================================== */}
+
       {!!query && (
         <>
+          {/* ==================================================
+              FUTURE
+              --------------------------------------------------
+              □ Hero Background
+              □ Verified Badge
+              □ Monthly Listeners
+              □ Followers
+              □ Artist Genres
+              ================================================== */}
+
+          <TopResult
+            results={results}
+          />
+
+          {/* ==================================================
+              Empty State
+              ================================================== */}
+
           {!results.songs?.length &&
           !results.albums?.length &&
           !results.artists?.length &&
           !results.playlists?.length ? (
             <EmptySearch />
           ) : (
-            <ResultGrid>
+            <>
+              {/* ==================================================
+                  Songs
+                  ================================================== */}
 
-              {results.songs?.map((song) => (
-                <SongResultCard
-                  key={song._id}
-                  song={song}
-                />
-              ))}
+              {!!results.songs?.length && (
+                <SearchSection
+                  title="Songs"
+                  count={results.songs.length}
+                >
+                  <ResultGrid>
 
-              {results.albums?.map((album) => (
-                <MusicCard
-                  key={album._id}
-                  song={album}
-                />
-              ))}
+                    {results.songs.map((song) => (
+                      <SongResultCard
+                        key={song._id}
+                        song={song}
+                      />
+                    ))}
 
-              {results.artists?.map((artist) => (
-                <ArtistCard
-                  key={artist._id}
-                  artist={artist}
-                />
-              ))}
+                  </ResultGrid>
+                </SearchSection>
+              )}
 
-              {results.playlists?.map((playlist) => (
-                <PlaylistCard
-                  key={playlist._id}
-                  playlist={playlist}
-                />
-              ))}
+              {/* ==================================================
+                  Albums
 
-            </ResultGrid>
+                  FUTURE
+                  -----------------------------------------------
+                  □ Album Preview
+                  □ Album Duration
+                  □ Album Stats
+                  ================================================== */}
+
+              {!!results.albums?.length && (
+                <SearchSection
+                  title="Albums"
+                  count={results.albums.length}
+                >
+                  <ResultGrid>
+
+                    {results.albums.map((album) => (
+                      <AlbumCard
+                        key={album._id}
+                        album={album}
+                      />
+                    ))}
+
+                  </ResultGrid>
+                </SearchSection>
+              )}
+
+              {/* ==================================================
+                  Artists
+
+                  FUTURE
+                  -----------------------------------------------
+                  □ Verified Badge
+                  □ Followers
+                  □ Monthly Listeners
+                  □ Artist Genres
+                  ================================================== */}
+
+              {!!results.artists?.length && (
+                <SearchSection
+                  title="Artists"
+                  count={results.artists.length}
+                >
+                  <ResultGrid>
+
+                    {results.artists.map((artist) => (
+                      <ArtistCard
+                        key={artist._id}
+                        artist={artist}
+                      />
+                    ))}
+
+                  </ResultGrid>
+                </SearchSection>
+              )}
+
+              {/* ==================================================
+                  Playlists
+
+                  FUTURE
+                  -----------------------------------------------
+                  □ Playlist Followers
+                  □ Playlist Duration
+                  □ Collaborative Badge
+                  □ Save Playlist
+                  ================================================== */}
+
+              {!!results.playlists?.length && (
+                <SearchSection
+                  title="Playlists"
+                  count={results.playlists.length}
+                >
+                  <ResultGrid>
+
+                    {results.playlists.map((playlist) => (
+                      <PlaylistCard
+                        key={playlist._id}
+                        playlist={playlist}
+                      />
+                    ))}
+
+                  </ResultGrid>
+                </SearchSection>
+              )}
+
+            </>
           )}
+
         </>
       )}
 

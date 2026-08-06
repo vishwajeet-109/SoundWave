@@ -1,26 +1,57 @@
 import api from "./api";
 
-const songService = {
-
+class SongService {
   getAll(params = {}) {
     return api.get("/songs", {
       params,
     });
-  },
+  }
 
-  getById(id) {
-    return api.get(`/songs/${id}`);
-  },
+  getById(songId) {
+    return api.get(`/songs/${songId}`);
+  }
 
-  getTrending() {
+  getTrending(limit = 10) {
     return api.get("/songs", {
       params: {
-        sort: "playCount",
-        limit: 10,
+        limit,
       },
     });
-  },
+  }
 
-};
+  getMySongs() {
+    return api.get("/songs/my-songs");
+  }
 
-export default songService;
+  create(formData) {
+    return api.post("/songs", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  update(songId, formData) {
+    return api.patch(`/songs/${songId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  delete(songId) {
+    return api.delete(`/songs/${songId}`);
+  }
+
+  approve(songId) {
+    return api.patch(`/songs/${songId}/approve`);
+  }
+
+  reject(songId, reason) {
+    return api.patch(`/songs/${songId}/reject`, {
+      reason,
+    });
+  }
+}
+
+export default new SongService();

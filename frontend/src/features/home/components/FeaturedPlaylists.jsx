@@ -1,5 +1,7 @@
 import SectionHeader from "./SectionHeader";
-import PlaylistCard from "./PlaylistCard";
+import PlaylistCard, {
+  PlaylistCardSkeleton,
+} from "./PlaylistCard";
 
 export default function FeaturedPlaylists({
   playlists = [],
@@ -10,31 +12,33 @@ export default function FeaturedPlaylists({
     <section className="mt-14">
       <SectionHeader
         title="Featured Playlists"
+        subtitle="Curated by SoundWave"
         href="/playlists"
       />
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        {loading ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-64 animate-pulse rounded-2xl bg-zinc-800"
-            />
-          ))
-        ) : playlists.length > 0 ? (
-          playlists.map((playlist) => (
+      {loading ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <PlaylistCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : playlists.length > 0 ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          {playlists.map((playlist) => (
             <PlaylistCard
               key={playlist._id}
               playlist={playlist}
               onPlay={onPlay}
             />
-          ))
-        ) : (
-          <div className="col-span-full rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center text-zinc-400">
+          ))}
+        </div>
+      ) : (
+        <div className="flex h-40 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900">
+          <p className="text-sm text-zinc-500">
             No featured playlists available.
-          </div>
-        )}
-      </div>
+          </p>
+        </div>
+      )}
     </section>
   );
 }
