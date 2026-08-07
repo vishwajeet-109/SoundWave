@@ -80,8 +80,7 @@ export default function AppRouter() {
           <Route path="/artist/dashboard" element={<ArtistDashboard />} />
           <Route path="/artist/upload" element={<UploadSong />} />
         </Route>
-
-        {/* ======================
+{/* ======================
                     Admin
         ======================= */}
         <Route
@@ -91,6 +90,8 @@ export default function AppRouter() {
         >
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/approval" element={<SongApproval />} />
+          
+          
         </Route>
 
         {/* =========================== 
@@ -104,6 +105,9 @@ export default function AppRouter() {
             </AdminRoute>
           }
         />
+
+        
+      
       </Route>
 
       {/* ===========================
