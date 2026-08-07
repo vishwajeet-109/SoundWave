@@ -1,64 +1,44 @@
-import {
-  Home,
-  Search,
-  Library,
-  ListMusic,
-  User,
-  Upload,
-  BarChart3,
-  FolderOpen,
-  Tags,
-  ShieldAlert,
-  Flag,
-  LayoutDashboard,
-  UserPlus, // 👈 UserPlus icon import kar liya hai
-} from "lucide-react";
+import { ROUTES } from '@/constants/routes';
 
 export const sidebarConfig = {
-  USER: [
-    {
-      title: "Browse",
-      items: [
-        { label: "Home", icon: Home, to: "/" },
-        { label: "Search", icon: Search, to: "/search" },
-        { label: "Library", icon: Library, to: "/library" },
-        { label: "Queue", icon: ListMusic, to: "/queue" },
-        { label: "Profile", icon: User, to: "/profile" },
-      ],
-    },
+  user: [
+    { title: 'Home', path: ROUTES.HOME, icon: 'HomeIcon' },
+    { title: 'Search', path: ROUTES.SEARCH, icon: 'SearchIcon' },
+    { title: 'Library', path: ROUTES.LIBRARY, icon: 'LibraryIcon' },
+    { title: 'Liked Songs', path: '/liked', icon: 'HeartIcon' },
+    { title: 'Playlists', path: '/playlists', icon: 'PlaylistIcon' },
+    { title: 'Albums', path: '/albums', icon: 'AlbumIcon' },
+    { title: 'Artists', path: '/artists', icon: 'MicIcon' },
+    { title: 'Profile', path: ROUTES.PROFILE, icon: 'UserIcon' },
+    { title: 'Queue', path: ROUTES.QUEUE, icon: 'QueueIcon' },
+    { title: 'History', path: '/history', icon: 'HistoryIcon' },
+    { title: 'Settings', path: '/settings', icon: 'SettingsIcon' },
   ],
-
-  ARTIST: [
-    {
-      title: "Browse",
-      items: [
-        { label: "Home", icon: Home, to: "/" },
-        { label: "Search", icon: Search, to: "/search" },
-      ],
-    },
-    {
-      title: "Artist",
-      items: [
-        { label: "Dashboard", icon: LayoutDashboard, to: "/artist/dashboard" },
-        { label: "Upload Song", icon: Upload, to: "/artist/upload" },
-        { label: "My Songs", icon: Library, to: "/artist/songs" },
-        { label: "Analytics", icon: BarChart3, to: "/artist/analytics" },
-      ],
-    },
+  artist: [
+    { title: 'Dashboard', path: ROUTES.ARTIST_DASHBOARD, icon: 'DashboardIcon' },
+    { title: 'Analytics', path: '/artist/analytics', icon: 'ChartIcon' },
+    { title: 'My Songs', path: '/artist/songs', icon: 'MusicIcon' },
+    { title: 'My Albums', path: '/artist/albums', icon: 'AlbumIcon' },
+    { title: 'Upload Song', path: ROUTES.ARTIST_UPLOAD, icon: 'UploadIcon' },
+    { title: 'Upload Album', path: '/artist/upload-album', icon: 'UploadCloudIcon' },
+    { title: 'Revenue', path: '/artist/revenue', icon: 'DollarIcon' },
+    { title: 'Followers', path: '/artist/followers', icon: 'UsersIcon' },
+    { title: 'Profile', path: '/artist/profile', icon: 'UserIcon' },
+    { title: 'Notifications', path: '/artist/notifications', icon: 'BellIcon' },
+    { title: 'Settings', path: '/artist/settings', icon: 'SettingsIcon' },
   ],
-
-  ADMIN: [
-    {
-      title: "Administration",
-      items: [
-        { label: "Dashboard", icon: LayoutDashboard, to: "/admin" },
-        { label: "Song Approval", icon: ShieldAlert, to: "/admin/approval" },
-        { label: "Create Artist", icon: UserPlus, to: "/admin/create-artist" }, // 👈 Yeh ab yahan properly aa gaya hai
-        { label: "Categories", icon: FolderOpen, to: "/admin/categories" },
-        { label: "Genres", icon: Tags, to: "/admin/genres" },
-        { label: "Reports", icon: Flag, to: "/admin/reports" },
-        { label: "Analytics", icon: BarChart3, to: "/admin/analytics" },
-      ],
-    },
-  ],
+  admin: [
+    { title: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: 'DashboardIcon' },
+    { title: 'Approvals', path: ROUTES.ADMIN_APPROVALS, icon: 'CheckIcon' },
+    { title: 'Users', path: ROUTES.ADMIN_USERS, icon: 'UsersIcon' },
+    { title: 'Artists', path: '/admin/artists', icon: 'MicIcon' },
+    { title: 'Create Artist', path: ROUTES.ADMIN_CREATE_ARTIST, icon: 'PlusCircleIcon' },
+    { title: 'Songs', path: '/admin/songs', icon: 'MusicIcon' },
+    { title: 'Albums', path: '/admin/albums', icon: 'AlbumIcon' },
+    { title: 'Categories', path: '/admin/categories', icon: 'CategoryIcon' },
+    { title: 'Genres', path: '/admin/genres', icon: 'GenreIcon' },
+    { title: 'Reports', path: ROUTES.ADMIN_REPORTS, icon: 'FlagIcon' },
+    { title: 'Analytics', path: '/admin/analytics', icon: 'ChartIcon' },
+    { title: 'Settings', path: '/admin/settings', icon: 'SettingsIcon' },
+  ]
 };

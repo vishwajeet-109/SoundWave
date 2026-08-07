@@ -7,11 +7,11 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 
-export const LoginForm = () => {
+const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   
-  // Step 1: Role Selection State ('user', 'artist', 'admin', or null)
+  // Step 1: Role Selection State
   const [selectedRole, setSelectedRole] = useState(null);
   
   // Step 2: Form State
@@ -29,12 +29,11 @@ export const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      // Call the existing authStore login method
       const user = await login(formData.email, formData.password);
 
-      // Smart Redirection based on actual backend role
+      // Smart Redirection based on actual backend role using Constants
       if (user?.role === 'admin' || user?.role === 'super_admin' || user?.role === 'moderator') {
-        navigate('/admin/approval', { replace: true });
+        navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
       } else if (user?.role === 'artist') {
         navigate(ROUTES.ARTIST_DASHBOARD, { replace: true });
       } else {
@@ -217,7 +216,6 @@ export const LoginForm = () => {
           <button 
             type="button"
             onClick={() => {
-              // Adjust these to match your backend seed data
               if (selectedRole === 'artist') setFormData({ email: 'artist@soundwave.com', password: 'password123' });
               if (selectedRole === 'admin') setFormData({ email: 'admin@soundwave.com', password: 'password123' });
               if (selectedRole === 'user') setFormData({ email: 'user@soundwave.com', password: 'password123' });

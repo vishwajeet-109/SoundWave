@@ -3,7 +3,7 @@ import {
   Users, Mic2, Music, DiscAlbum, 
   TrendingUp, ShieldAlert, Activity, DollarSign
 } from 'lucide-react';
-import { AdminLayout } from '../components/AdminLayout';
+import AdminLayout from "../components/AdminLayout";
 import { useAdminStats, useAdminAnalytics } from '../hooks/useAdmin';
 import { Card } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';

@@ -1,21 +1,37 @@
-import { Navigate, Outlet } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
+import { ROUTES } from '@/constants/routes';
+import { Loader2 } from 'lucide-react';
 
-export default function RoleRoute({
-  roles = [],
-}) {
-  const { user } = useAuth();
+export const RoleRoute = ({ allowedRoles }) => {
+  const { user, isAuthenticated, isLoading } = useAuth();
 
-  // User not loaded yet
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  // Prevent premature redirects while auth state is resolving
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-zinc-950">
+        <Loader2 className="w-8 h-8 animate-spin text-green-500" />
+      </div>
+    );
   }
 
-  // Check role
-  if (!roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
+  }
+
+  if (!allowedRoles.includes(user?.role)) {
+    // If an Admin tries to access a restricted User route, send them back to Admin dashboard
+    if (user?.role === 'admin' || user?.role === 'super_admin' || user?.role === 'moderator') {
+      return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />;
+    }
+    // If an Artist tries to access a restricted User route
+    if (user?.role === 'artist') {
+      return <Navigate to={ROUTES.ARTIST_DASHBOARD} replace />;
+    }
+    // Default unauthorized user redirect
+    return <Navigate to={ROUTES.HOME} replace />;
   }
 
   return <Outlet />;
-}
-export { RoleRoute };
+};

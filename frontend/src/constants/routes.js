@@ -1,34 +1,26 @@
 export const ROUTES = {
-  HOME: "/",
+  // Auth
+  LOGIN: '/login',
+  REGISTER: '/register',
+  
+  // User
+  HOME: '/',
+  SEARCH: '/search',
+  LIBRARY: '/library',
+  PROFILE: '/profile',
+  QUEUE: '/queue',
+  ALBUMS: '/albums',
+  ARTISTS: '/artists',
+  PLAYLISTS: '/playlists',
 
-  LOGIN: "/login",
-
-  REGISTER: "/register",
-
-  FORGOT_PASSWORD: "/forgot-password",
-
-  RESET_PASSWORD: "/reset-password",
-
-  SEARCH: "/search",
-
-  LIBRARY: "/library",
-
-  PROFILE: "/profile",
-
-  HISTORY: "/history",
-
-  LIKED: "/liked",
-
-  PLAYLIST: "/playlist/:id",
-
-  ALBUM: "/album/:id",
-
-  ARTIST: "/artist/:id",
-
-  DASHBOARD: "/dashboard",
-
-  ADMIN: "/admin",
+  // Artist
   ARTIST_DASHBOARD: '/artist/dashboard',
+  ARTIST_UPLOAD: '/artist/upload',
 
-  NOT_FOUND: "*",
+  // Admin
+  ADMIN_DASHBOARD: '/admin',
+  ADMIN_APPROVALS: '/admin/approval',
+  ADMIN_CREATE_ARTIST: '/admin/create-artist',
+  ADMIN_REPORTS: '/admin/reports', // Assuming you'll add this
+  ADMIN_USERS: '/admin/users',     // Assuming you'll add this
 };

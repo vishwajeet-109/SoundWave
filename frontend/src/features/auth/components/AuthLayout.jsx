@@ -1,14 +1,14 @@
 import { Music2 } from "lucide-react";
+import { Outlet } from "react-router-dom";
 
-export default function AuthLayout({ children }) {
+function AuthLayout() {
   return (
-    <div className="flex min-h-screen bg-zinc-950 text-white">
+    <div className="flex min-h-screen bg-black text-white">
+
       {/* Left Side */}
-      <div className="hidden lg:flex flex-1 items-center justify-center border-r border-zinc-800 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950">
-        <div className="max-w-md">
-          <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-green-500 to-blue-500">
-            <Music2 size={42} />
-          </div>
+      <div className="hidden lg:flex flex-1 items-center justify-center bg-zinc-950">
+        <div className="max-w-md text-center">
+          <Music2 className="mx-auto mb-6 h-16 w-16 text-green-500" />
 
           <h1 className="mb-4 text-5xl font-bold">
             SoundWave
@@ -22,8 +22,11 @@ export default function AuthLayout({ children }) {
 
       {/* Right Side */}
       <div className="flex flex-1 items-center justify-center p-10">
-        {children}
+        <Outlet />
       </div>
+
     </div>
   );
 }
+
+export default AuthLayout;

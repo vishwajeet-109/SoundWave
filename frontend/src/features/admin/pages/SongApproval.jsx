@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check, X, PlayCircle, Music, Clock } from 'lucide-react';
-import { AdminLayout } from '../components/AdminLayout';
+import AdminLayout from '../components/AdminLayout';
 import { usePendingSongs, useApproveSong, useRejectSong } from '../hooks/useApprovals';
 import { Card } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
