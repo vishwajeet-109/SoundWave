@@ -1,1 +1,4 @@
-import { useRecentlyPlayed} from "@/features/Library/hooks/useRecentlyPlayed";
+const useRecentlyPlayed = () => null;
+
+export { useRecentlyPlayed };
+export default useRecentlyPlayed;

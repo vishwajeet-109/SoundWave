@@ -6,7 +6,7 @@ import AppShell from "@/layouts/AppShell";
 // Route Guards
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicRoute from "@/components/auth/PublicRoute";
-import { RoleRoute } from "@/components/auth/RoleRoute";
+import RoleRoute from "@/components/auth/RoleRoute";
 import AdminRoute from "@/routes/AdminRoutes";
 
 // Auth

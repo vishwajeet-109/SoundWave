@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card } from '@/shared/ui/card';
+import Card from '@/shared/ui/card';
 import { DollarSign, ArrowUpRight } from 'lucide-react';
 
 // DUMMY UI: Implemented as instructed because no /api/v1/revenue backend exists.
-export const RevenueCard = () => {
+const RevenueCard = () => {
   return (
     <Card className="p-6 bg-gradient-to-br from-[#171717] to-[#111111] border-[#2A2A2A] relative overflow-hidden h-full">
       <div className="absolute top-0 right-0 p-16 bg-[#22C55E]/5 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
@@ -31,3 +31,5 @@ export const RevenueCard = () => {
     </Card>
   );
 };
+
+export default RevenueCard;

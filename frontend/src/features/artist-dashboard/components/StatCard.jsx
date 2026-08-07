@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card } from '@/shared/ui/card';
-import { Skeleton } from '@/shared/ui/skeleton';
+import Card from '@/shared/ui/card';
+import Skeleton from '@/shared/ui/skeleton';
 
-export const StatCard = ({ title, value, icon: Icon, trend, isLoading }) => {
+const StatCard = ({ title, value, icon: Icon, trend, isLoading }) => {
   if (isLoading) {
     return (
       <Card className="p-6 bg-[#171717] border-[#2A2A2A]">
@@ -36,3 +36,5 @@ export const StatCard = ({ title, value, icon: Icon, trend, isLoading }) => {
     </Card>
   );
 };
+
+export default StatCard;

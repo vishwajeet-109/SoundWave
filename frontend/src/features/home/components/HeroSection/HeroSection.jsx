@@ -9,7 +9,7 @@ import {
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-import { Button } from "@/shared/ui";
+import Button from "@/shared/ui/button";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 const PLACEHOLDER =

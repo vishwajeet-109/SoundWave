@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, Music, Image as ImageIcon, X, CheckCircle2 } from 'lucide-react';
-import { DashboardLayout } from '../components/DashboardLayout';
-import { useUploadSong } from '../hooks/useUploadSong';
+import DashboardLayout from '../components/DashboardLayout';
+import useUploadSong from '../hooks/useUploadSong';
 
-export const UploadSong = () => {
+const UploadSong = () => {
   const navigate = useNavigate();
   const { mutateAsync: uploadSong, isPending } = useUploadSong();
   
@@ -231,3 +231,5 @@ export const UploadSong = () => {
     </DashboardLayout>
   );
 };
+
+export default UploadSong;

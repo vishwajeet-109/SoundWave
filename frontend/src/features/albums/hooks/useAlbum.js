@@ -4,7 +4,7 @@ import { albumService } from "../services/albumService";
 
 import { QUERY_KEYS } from "@/constants/queryKeys";
 
-export function useAlbum(albumId) {
+function useAlbum(albumId) {
   return useQuery({
     queryKey: QUERY_KEYS.ALBUM(albumId),
 

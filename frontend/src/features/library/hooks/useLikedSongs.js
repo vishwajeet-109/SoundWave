@@ -1,1 +1,4 @@
-import { useLikedSongs } from "@/features/Library/hooks/useLikedSongs";
+const useLikedSongs = () => null;
+
+export { useLikedSongs };
+export default useLikedSongs;

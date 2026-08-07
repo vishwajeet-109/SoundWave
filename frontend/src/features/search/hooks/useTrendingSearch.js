@@ -4,7 +4,7 @@ import { searchService } from "../services/searchService";
 
 import { QUERY_KEYS } from "@/constants/queryKeys";
 
-export function useTrendingSearch() {
+function useTrendingSearch() {
 
   return useQuery({
 

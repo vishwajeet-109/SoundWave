@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '../api/adminApi';
 
-export const useAdminStats = () => {
+const useAdminStats = () => {
   return useQuery({
     queryKey: ['admin', 'dashboard-stats'],
     queryFn: adminApi.getDashboardStats,
@@ -9,10 +9,16 @@ export const useAdminStats = () => {
   });
 };
 
-export const useAdminAnalytics = () => {
+const useAdminAnalytics = () => {
   return useQuery({
     queryKey: ['admin', 'analytics-overview'],
     queryFn: adminApi.getAnalyticsOverview,
     staleTime: 5 * 60 * 1000,
   });
+};
+
+export { useAdminStats, useAdminAnalytics };
+export default {
+  useAdminStats,
+  useAdminAnalytics,
 };

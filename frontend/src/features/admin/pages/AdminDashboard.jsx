@@ -4,10 +4,10 @@ import {
   TrendingUp, ShieldAlert, Activity, DollarSign
 } from 'lucide-react';
 // 🚨 AdminLayout yahan se HATA diya hai!
-import { useAdminStats, useAdminAnalytics } from '../hooks/useAdmin';
-import { Card } from '@/shared/ui/card';
-import { Skeleton } from '@/shared/ui/skeleton';
-import { ErrorState } from '@/shared/ui/states/ErrorState';
+import adminHooks from '../hooks/useAdmin';
+import Card from '@/shared/ui/card';
+import Skeleton from '@/shared/ui/skeleton';
+import ErrorState from '@/shared/ui/states/ErrorState';
 
 const StatCard = ({ title, value, icon: Icon, trend, isLoading, color = "text-blue-500", bg = "bg-blue-500/10" }) => {
   if (isLoading) {
@@ -42,7 +42,8 @@ const StatCard = ({ title, value, icon: Icon, trend, isLoading, color = "text-bl
   );
 };
 
-export const AdminDashboard = () => {
+const AdminDashboard = () => {
+  const { useAdminStats, useAdminAnalytics } = adminHooks;
   const { data: statsResponse, isLoading: statsLoading, isError: statsError } = useAdminStats();
   const { data: analyticsResponse, isLoading: analyticsLoading } = useAdminAnalytics();
 

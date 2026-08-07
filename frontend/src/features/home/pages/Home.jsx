@@ -10,11 +10,9 @@ import ContinueListening from "../components/ContinueListening";
 
 import { useHome } from "../hooks/useHome";
 
-import {
-  Loader,
-  EmptyState,
-  ErrorMessage,
-} from "@/shared/ui";
+import Loader from "@/shared/ui/loader";
+import EmptyState from "@/shared/ui/states/EmptyState";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
 
 import { usePlayerContext } from "@/context/PlayerContext";
 

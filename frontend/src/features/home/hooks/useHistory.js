@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import historyService from "@/services/historyService";
 
-export function useHistory(options = {}) {
+function useHistory(options = {}) {
   return useQuery({
     queryKey: ["history"],
 
@@ -18,3 +18,6 @@ export function useHistory(options = {}) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+export { useHistory };
+export default useHistory;

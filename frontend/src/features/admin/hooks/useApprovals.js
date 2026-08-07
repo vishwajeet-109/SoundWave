@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { approvalApi } from '../api/approvalApi';
 
-export const usePendingSongs = () => {
+const usePendingSongs = () => {
   return useQuery({
     queryKey: ['admin', 'pending-songs'],
     queryFn: approvalApi.getPendingSongs,
@@ -9,7 +9,7 @@ export const usePendingSongs = () => {
   });
 };
 
-export const useApproveSong = () => {
+const useApproveSong = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
@@ -22,7 +22,7 @@ export const useApproveSong = () => {
   });
 };
 
-export const useRejectSong = () => {
+const useRejectSong = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
@@ -31,4 +31,12 @@ export const useRejectSong = () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-songs'] });
     },
   });
+};
+
+export { usePendingSongs, useApproveSong, useRejectSong };
+
+export default {
+  usePendingSongs,
+  useApproveSong,
+  useRejectSong,
 };

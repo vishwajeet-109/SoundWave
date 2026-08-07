@@ -1,8 +1,8 @@
 import React from 'react';
 import { UploadCloud, DiscAlbum, Edit3 } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import Button from '@/shared/ui/button';
 
-export const QuickActions = () => {
+const QuickActions = () => {
   return (
     <div className="flex flex-wrap gap-4 mb-8">
       <Button className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#080808] font-semibold flex items-center gap-2">
@@ -20,3 +20,5 @@ export const QuickActions = () => {
     </div>
   );
 };
+
+export default QuickActions;

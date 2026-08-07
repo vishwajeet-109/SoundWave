@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { label: 'Settings', icon: Settings, href: '/artist/settings' },
 ];
 
-export const ArtistSidebar = () => {
+const ArtistSidebar = () => {
   const location = useLocation();
 
   return (
@@ -48,3 +48,5 @@ export const ArtistSidebar = () => {
     </aside>
   );
 };
+
+export default ArtistSidebar;

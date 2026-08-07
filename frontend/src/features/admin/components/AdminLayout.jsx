@@ -1,10 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-// THE FIX: Wrapped in curly braces to match your named exports
-import { AdminSidebar } from './AdminSidebar'; 
-import { AdminHeader } from './AdminHeader';   
-
+import AdminSidebar from './AdminSidebar';
+import AdminHeader from './AdminHeader';
 const AdminLayout = () => {
   return (
     <div className="flex h-screen bg-zinc-950 text-zinc-50 overflow-hidden">

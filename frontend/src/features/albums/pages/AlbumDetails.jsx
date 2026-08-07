@@ -8,7 +8,8 @@ import AlbumActions from "../components/AlbumActions";
 import TrackList from "../components/TrackList";
 import AlbumSkeleton from "../components/AlbumSkeleton";
 
-import { EmptyState, ErrorMessage } from "@/shared/ui";
+import EmptyState from "@/shared/ui/states/EmptyState";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
 
 export default function AlbumDetails() {
   const { id } = useParams();

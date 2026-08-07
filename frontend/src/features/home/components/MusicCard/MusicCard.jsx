@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Heart, MoreHorizontal, Play, Music2 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Card } from "@/shared/ui/card";
+import Card from "@/shared/ui/card";
 import { useMusicCard } from "../../hooks/useMusicCard";
 
 const PLACEHOLDER =

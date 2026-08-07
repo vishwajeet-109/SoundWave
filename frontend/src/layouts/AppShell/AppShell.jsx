@@ -5,7 +5,7 @@ import  RightSidebar from '@/components/layout/RightSidebar';
 import Header from "@/components/layout/Header";
 import  MusicPlayer from '@/components/player/MusicPlayer';
 
-export const AppShell = () => {
+const AppShell = () => {
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#080808] text-[#FAFAFA] flex flex-col">
       <div className="flex flex-1 overflow-hidden">
@@ -29,4 +29,5 @@ export const AppShell = () => {
     </div>
   );
 };
-export { default } from "./AppShell";
+
+export default AppShell;

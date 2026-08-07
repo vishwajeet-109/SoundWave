@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { artistDashboardApi } from '../api/artistDashboardApi';
-import { useAuth } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 
-export const useArtistStats = () => {
+const useArtistStats = () => {
   return useQuery({
     queryKey: ['artist-stats'],
     queryFn: artistDashboardApi.getStats,
@@ -10,7 +10,7 @@ export const useArtistStats = () => {
   });
 };
 
-export const useArtistRecentUploads = () => {
+const useArtistRecentUploads = () => {
   const { user } = useAuth();
   return useQuery({
     queryKey: ['artist-recent-uploads', user?._id],
@@ -19,9 +19,16 @@ export const useArtistRecentUploads = () => {
   });
 };
 
-export const useArtistNotifications = () => {
+const useArtistNotifications = () => {
   return useQuery({
     queryKey: ['artist-notifications'],
     queryFn: artistDashboardApi.getNotifications,
   });
+};
+
+export { useArtistStats, useArtistRecentUploads, useArtistNotifications };
+export default {
+  useArtistStats,
+  useArtistRecentUploads,
+  useArtistNotifications,
 };

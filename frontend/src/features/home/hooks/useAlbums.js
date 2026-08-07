@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import albumService from "@/services/albumService";
 
-export function useAlbums(params = {}) {
+function useAlbums(params = {}) {
   return useQuery({
     queryKey: ["albums", params],
 
@@ -15,3 +15,6 @@ export function useAlbums(params = {}) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+export { useAlbums };
+export default useAlbums;

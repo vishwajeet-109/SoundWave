@@ -8,7 +8,7 @@ import { useHistory } from "./useHistory";
 
 import useAuth from "@/hooks/useAuth";
 
-export function useHome() {
+function useHome() {
   const songsQuery = useSongs();
 
   const albumsQuery = useAlbums();
@@ -110,4 +110,6 @@ export function useHome() {
 
   
 }
+export { useHome };
+export default useHome; 
 

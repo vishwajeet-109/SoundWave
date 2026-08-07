@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 // 🚨 FIX: Added ShieldCheck import!
 import { Check, X, PlayCircle, Music, Clock, ShieldCheck } from 'lucide-react';
 // 🚨 FIX: AdminLayout import removed!
-import { usePendingSongs, useApproveSong, useRejectSong } from '../hooks/useApprovals';
-import { Card } from '@/shared/ui/card';
-import { Button } from '@/shared/ui/button';
-import { Skeleton } from '@/shared/ui/skeleton';
-import { EmptyState } from '@/shared/ui/states/EmptyState';
-import { ErrorState } from '@/shared/ui/states/ErrorState';
+import approvalHooks from '../hooks/useApprovals';
+import Card from '@/shared/ui/card';
+import Button from '@/shared/ui/button';
+import Skeleton from '@/shared/ui/skeleton';
+import EmptyState from '@/shared/ui/states/EmptyState';
+import ErrorState from '@/shared/ui/states/ErrorState';
 
-export const SongApproval = () => {
+const SongApproval = () => {
+  const { usePendingSongs, useApproveSong, useRejectSong } = approvalHooks;
   const { data: response, isLoading, isError } = usePendingSongs();
   const { mutate: approve, isPending: isApproving } = useApproveSong();
   const { mutate: reject, isPending: isRejecting } = useRejectSong();
@@ -124,3 +125,5 @@ export const SongApproval = () => {
     </div>
   );
 };
+
+export default SongApproval;

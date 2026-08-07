@@ -1,10 +1,10 @@
 import React from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { Avatar } from "@/shared/ui/avatar";
+import useAuth from '@/hooks/useAuth';
+import Avatar from "@/shared/ui/avatar";
 import { Bell } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import Button from '@/shared/ui/button';
 
-export const ArtistHeader = () => {
+const ArtistHeader = () => {
   const { user } = useAuth();
 
   return (
@@ -30,3 +30,5 @@ export const ArtistHeader = () => {
     </header>
   );
 };
+
+export default ArtistHeader;

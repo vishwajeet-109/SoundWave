@@ -1,8 +1,8 @@
 import React from 'react';
-import { ArtistSidebar } from './ArtistSidebar';
-import { ArtistHeader } from './ArtistHeader';
+import ArtistSidebar from './ArtistSidebar';
+import ArtistHeader from './ArtistHeader';
 
-export const DashboardLayout = ({ children }) => {
+const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-[#080808] text-[#FAFAFA]">
       <ArtistSidebar />
@@ -15,3 +15,5 @@ export const DashboardLayout = ({ children }) => {
     </div>
   );
 };
+
+export default DashboardLayout;

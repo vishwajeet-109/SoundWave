@@ -1,17 +1,18 @@
 import React from 'react';
 import { Headphones, DiscAlbum, Users, PlayCircle, Clock } from 'lucide-react';
-import { DashboardLayout } from '../components/DashboardLayout';
-import { StatCard } from '../components/StatCard';
-import { QuickActions } from '../components/QuickActions';
-import { RevenueCard } from '../components/RevenueCard';
-import { useArtistStats, useArtistRecentUploads, useArtistNotifications } from '../hooks/useArtistDashboard';
-import { Card } from '@/shared/ui/card';
-import { Badge } from '@/shared/ui/badge';
-import { Skeleton } from '@/shared/ui/skeleton';
+import DashboardLayout from '../components/DashboardLayout';
+import StatCard from '../components/StatCard';
+import QuickActions from '../components/QuickActions';
+import RevenueCard from '../components/RevenueCard';
+import artistDashboardHooks from '../hooks/useArtistDashboard';
+import Card from '@/shared/ui/card';
+import Badge from '@/shared/ui/badge';
+import Skeleton from '@/shared/ui/skeleton';
 import EmptyState from "@/shared/ui/states/EmptyState";
-import { ErrorState } from '@/shared/ui/states/ErrorState';
+import ErrorState from '@/shared/ui/states/ErrorState';
 
-export const ArtistDashboard = () => {
+const ArtistDashboard = () => {
+  const { useArtistStats, useArtistRecentUploads, useArtistNotifications } = artistDashboardHooks;
   const { data: statsResponse, isLoading: statsLoading, isError: statsError } = useArtistStats();
   const { data: uploadsResponse, isLoading: uploadsLoading } = useArtistRecentUploads();
   const { data: notifsResponse, isLoading: notifsLoading } = useArtistNotifications();
@@ -121,3 +122,5 @@ export const ArtistDashboard = () => {
     </DashboardLayout>
   );
 };
+
+export default ArtistDashboard;

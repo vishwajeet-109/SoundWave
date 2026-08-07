@@ -3,7 +3,7 @@ import { useMemo, useCallback } from "react";
 const PLACEHOLDER =
   "https://placehold.co/600x600/171717/ffffff?text=♪";
 
-export function useSongResultCard({ song }) {
+function useSongResultCard({ song }) {
   const cover = useMemo(
     () => song?.coverImage || song?.cover || PLACEHOLDER,
     [song]

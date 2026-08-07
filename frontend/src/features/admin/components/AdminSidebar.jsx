@@ -4,7 +4,7 @@ import SidebarLogo from '@/components/layout/Sidebar/SidebarLogo';
 import { LayoutDashboard, ShieldAlert, Folder, Tags, Flag, BarChart3, UserPlus } from 'lucide-react';
 import { ROUTES } from '@/constants/routes'; // ROUTES USE KAR RAHE HAIN AB
 
-export const AdminSidebar = () => {
+const AdminSidebar = () => {
   // Ab yeh kabhi 404 nahi dega kyunki exact constants use ho rahe hain
   const adminLinks = [
     { title: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
@@ -30,3 +30,5 @@ export const AdminSidebar = () => {
     </aside>
   );
 };
+
+export default AdminSidebar;

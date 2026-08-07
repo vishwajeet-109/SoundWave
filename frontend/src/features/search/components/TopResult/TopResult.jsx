@@ -3,7 +3,7 @@ import { Play } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-import { Card } from "@/shared/ui";
+import Card from "@/shared/ui/card";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 const PLACEHOLDER =

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import songService from "@/services/songService";
 
-export function useSongs(params = {}) {
+function useSongs(params = {}) {
   return useQuery({
     queryKey: ["songs", params],
 
@@ -15,3 +15,6 @@ export function useSongs(params = {}) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+export { useSongs };
+export default useSongs;

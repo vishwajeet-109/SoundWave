@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { uploadApi } from '../api/uploadApi';
 
-export const useUploadSong = () => {
+const useUploadSong = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -14,3 +14,5 @@ export const useUploadSong = () => {
     },
   });
 };
+
+export default useUploadSong;

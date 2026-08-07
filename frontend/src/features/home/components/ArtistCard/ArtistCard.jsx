@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Play, BadgeCheck, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Card } from "@/shared/ui/card";
+import Card from "@/shared/ui/card";
 import { useArtistCard } from "../../hooks/useArtistCard";
 
 const PLACEHOLDER =

@@ -1,9 +1,9 @@
 import React from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { Avatar } from '@/shared/ui/avatar';
+import useAuth from '@/hooks/useAuth';
+import Avatar from '@/shared/ui/avatar';
 import { ShieldAlert } from 'lucide-react';
 
-export const AdminHeader = () => {
+const AdminHeader = () => {
   const { user } = useAuth();
 
   return (
@@ -23,3 +23,5 @@ export const AdminHeader = () => {
     </header>
   );
 };
+
+export default AdminHeader;

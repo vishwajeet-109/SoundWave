@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import artistService from "@/services/artistService";
 
-export function useArtists(params = {}) {
+function useArtists(params = {}) {
   return useQuery({
     queryKey: ["artists", params],
 
@@ -15,3 +15,6 @@ export function useArtists(params = {}) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+export { useArtists };
+export default useArtists;

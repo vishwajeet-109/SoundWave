@@ -4,7 +4,7 @@ import useAuth from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { Loader2 } from 'lucide-react';
 
-export const RoleRoute = ({ allowedRoles }) => {
+const RoleRoute = ({ allowedRoles }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   // Prevent premature redirects while auth state is resolving
@@ -35,3 +35,5 @@ export const RoleRoute = ({ allowedRoles }) => {
 
   return <Outlet />;
 };
+
+export default RoleRoute;

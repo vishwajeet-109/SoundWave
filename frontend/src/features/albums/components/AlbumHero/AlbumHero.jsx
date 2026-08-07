@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
-import { Badge, Avatar } from "@/shared/ui";
+import Badge from "@/shared/ui/badge";
+import Avatar from "@/shared/ui/avatar";
 
 import { formatAlbumDuration } from "../../utils/formatDuration";
 

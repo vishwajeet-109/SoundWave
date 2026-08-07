@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Play, ListMusic, User } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Card } from "@/shared/ui/card";
+import Card from "@/shared/ui/card";
 import { usePlaylistCard } from "../../hooks/usePlaylistCard";
 
 const PLACEHOLDER =

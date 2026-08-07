@@ -4,7 +4,7 @@ import { USER_NAV, ARTIST_NAV, ADMIN_NAV } from './sidebar.config';
 import SidebarItem from "./SidebarItem";
 import SidebarLogo from "./SidebarLogo";
 
-export const Sidebar = () => {
+const Sidebar = () => {
   const { user } = useAuth();
   const role = user?.role || 'user';
 

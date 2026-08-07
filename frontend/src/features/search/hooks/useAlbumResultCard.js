@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-export function useAlbumResultCard({ album, onPlay }) {
+function useAlbumResultCard({ album, onPlay }) {
   const song = useMemo(
     () => ({
       _id: album?._id,

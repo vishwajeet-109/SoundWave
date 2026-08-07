@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import libraryService from "../services/libraryService";
 
-export function useLibrary(options = {}) {
+function useLibrary(options = {}) {
   return useQuery({
     queryKey: ["library"],
 
@@ -18,4 +18,5 @@ export function useLibrary(options = {}) {
   });
 }
 
+export { useLibrary };
 export default useLibrary;
