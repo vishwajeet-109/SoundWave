@@ -7,7 +7,7 @@ import AppShell from "@/layouts/AppShell";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicRoute from "@/components/auth/PublicRoute";
 import { RoleRoute } from "@/components/auth/RoleRoute";
-
+import AdminRoute from "@/routes/AdminRoute"; 
 // Auth
 import Login from "@/features/auth/pages/Login";
 import Register from "@/features/auth/pages/Register";
@@ -35,8 +35,7 @@ import QueuePage from "@/features/home/pages/QueuePage";
 
 // Profile
 import ProfilePage from "@/features/home/pages/ProfilePage";
-
-// New Artist Dashboard Import (FIX: Uncommented)
+import CreateArtistPage from "@/features/admin/pages/CreateArtistPage"; 
 import { ArtistDashboard, UploadSong } from "@/features/artist-dashboard";
 // New Admin Import
 import { SongApproval, AdminDashboard } from "@/features/admin";
@@ -93,7 +92,7 @@ export default function AppRouter() {
         </Route>
       </Route>
 
-      
+
       {/* ===========================  
           artitst creation route for admin panel
       ============================ */}

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShieldCheck, ListMusic, Tags, Flag, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, ListMusic, Tags, Flag, BarChart3, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 const ADMIN_NAV = [
   { label: 'Overview', icon: LayoutDashboard, href: '/admin' },
   { label: 'Song Approvals', icon: ShieldCheck, href: '/admin/approval' },
+  { label: 'Create Artist', icon: UserPlus, href: '/admin/create-artist' }, // 👈 Yeh naya link add kar diya hai
   { label: 'Categories', icon: ListMusic, href: '/admin/categories' },
   { label: 'Genres', icon: Tags, href: '/admin/genres' },
   { label: 'Reports', icon: Flag, href: '/admin/reports' },

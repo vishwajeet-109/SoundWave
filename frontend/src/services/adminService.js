@@ -73,6 +73,14 @@ const adminService = {
   deleteArtist(id) {
     return api.delete(`/admin/artists/${id}`);
   },
+
+  // --- Reports Management ---
+  getReports() {
+    return api.get("/admin/reports"); // ya aapke backend report route ke mutabiq
+  },
+  updateReportStatus(reportId, status) {
+    return api.patch(`/admin/reports/${reportId}`, { status });
+  },
 };
 
 export default adminService;
