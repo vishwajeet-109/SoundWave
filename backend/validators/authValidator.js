@@ -5,68 +5,74 @@ export const registerValidator = [
     .trim()
     .notEmpty()
     .withMessage("Name is required")
-    .isLength({ min: 2, max: 50 }),
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Name must be between 2 and 50 characters"),
 
   body("email")
     .trim()
+    .notEmpty()
+    .withMessage("Email is required")
     .isEmail()
     .withMessage("Invalid email")
     .normalizeEmail(),
 
   body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password is required")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters"),
 ];
-export const loginValidator = [
 
+export const loginValidator = [
   body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
     .isEmail()
-    .withMessage("Valid email is required"),
+    .withMessage("Valid email is required")
+    .normalizeEmail(),
 
   body("password")
+    .trim()
     .notEmpty()
     .withMessage("Password is required"),
-
 ];
+
 export const forgotPasswordValidator = [
-
-    body("email")
-        .trim()
-        .notEmpty()
-        .withMessage("Email is required")
-        .isEmail()
-        .withMessage("Please enter a valid email")
-
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email")
+    .normalizeEmail()
 ];
 
 export const resetPasswordValidator = [
+  body("token")
+    .trim()
+    .notEmpty()
+    .withMessage("Reset token is required"),
 
-    body("token")
-        .trim()
-        .notEmpty()
-        .withMessage("Reset token is required"),
-
-    body("password")
-        .trim()
-        .isLength({ min: 8 })
-        .withMessage(
-            "Password must be at least 8 characters"
-        )
-
+  body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters")
 ];
 
 export const changePasswordValidator = [
+  body("currentPassword")
+    .trim()
+    .notEmpty()
+    .withMessage("Current password is required"),
 
-    body("currentPassword")
-        .trim()
-        .notEmpty()
-        .withMessage("Current password is required"),
-
-    body("newPassword")
-        .trim()
-        .isLength({ min: 8 })
-        .withMessage(
-            "New password must be at least 8 characters"
-        )
-
+  body("newPassword")
+    .trim()
+    .notEmpty()
+    .withMessage("New password is required")
+    .isLength({ min: 8 })
+    .withMessage("New password must be at least 8 characters")
 ];
