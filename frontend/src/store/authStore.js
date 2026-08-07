@@ -13,13 +13,19 @@ const useAuthStore = create((set, get) => ({
   isAuthenticated: !!storage.getToken(),
 
   // ======================
-  // LOGIN
+  // LOGIN (FIXED)
   // ======================
 
-  login: async (credentials) => {
+  login: async (emailOrCredentials, password) => {
     set({ loading: true });
 
     try {
+      // Handle both object { email, password } and separate (email, password) arguments
+      let credentials = emailOrCredentials;
+      if (typeof emailOrCredentials === 'string' && password) {
+        credentials = { email: emailOrCredentials, password };
+      }
+
       const response = await authService.login(credentials);
 
       const { accessToken, user } = response.data.data;
