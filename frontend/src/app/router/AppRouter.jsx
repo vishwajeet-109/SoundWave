@@ -7,7 +7,8 @@ import AppShell from "@/layouts/AppShell";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicRoute from "@/components/auth/PublicRoute";
 import { RoleRoute } from "@/components/auth/RoleRoute";
-import AdminRoute from "@/routes/AdminRoute"; 
+import AdminRoute from "@/routes/AdminRoutes";
+
 // Auth
 import Login from "@/features/auth/pages/Login";
 import Register from "@/features/auth/pages/Register";
@@ -27,7 +28,7 @@ import ArtistDetails from "@/features/home/pages/ArtistDetails";
 // Playlists
 import PlaylistDetails from "@/features/home/pages/PlaylistDetails";
 
-// Library (FIX: Using the actual Library feature module)
+// Library
 import Library from "@/features/library/pages/Library";
 
 // Queue
@@ -37,7 +38,8 @@ import QueuePage from "@/features/home/pages/QueuePage";
 import ProfilePage from "@/features/home/pages/ProfilePage";
 import CreateArtistPage from "@/features/admin/pages/CreateArtistPage"; 
 import { ArtistDashboard, UploadSong } from "@/features/artist-dashboard";
-// New Admin Import
+
+// Admin Imports
 import { SongApproval, AdminDashboard } from "@/features/admin";
 
 export default function AppRouter() {
@@ -50,11 +52,12 @@ export default function AppRouter() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Route>
+
       {/* ===========================
             PROTECTED ROUTES
       ============================ */}
       <Route element={<ProtectedRoute />}>
-        {/* Consumer App (Uses AppShell with standard Sidebar/Header) */}
+        {/* Main User Routes */}
         <Route element={<AppShell />}>
           <Route index element={<Home />} />
           <Route path="/search" element={<Search />} />
@@ -67,8 +70,8 @@ export default function AppRouter() {
         </Route>
 
         {/* ======================
-                  Artist
-        ======================= */}
+                    Artist
+        ================------- */}
         <Route
           element={
             <RoleRoute allowedRoles={["artist", "admin", "super_admin"]} />
@@ -79,32 +82,29 @@ export default function AppRouter() {
         </Route>
 
         {/* ======================
-                  Admin
+                    Admin
         ======================= */}
         <Route
           element={
             <RoleRoute allowedRoles={["admin", "super_admin", "moderator"]} />
           }
         >
-          {/* FIX: Map the root admin route to the new AdminDashboard */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/approval" element={<SongApproval />} />
         </Route>
+
+        {/* =========================== 
+            Artist Creation Route (Secured with AdminRoute)
+        ============================ */}
+        <Route
+          path="/admin/create-artist"
+          element={
+            <AdminRoute>
+              <CreateArtistPage />
+            </AdminRoute>
+          }
+        />
       </Route>
-
-
-      {/* ===========================  
-          artitst creation route for admin panel
-      ============================ */}
-      <Route
-        path="/admin/create-artist"
-        element={
-          <AdminRoute>
-            <CreateArtistPage />
-          </AdminRoute>
-        }
-      />
-
 
       {/* ===========================
             FALLBACK

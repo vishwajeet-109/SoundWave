@@ -81,6 +81,10 @@ const adminService = {
   updateReportStatus(reportId, status) {
     return api.patch(`/admin/reports/${reportId}`, { status });
   },
+  // adminService.js ke andar yeh method add karein
+  createArtist(artistData) {
+    return api.post("/admin/artists", artistData); // Backend route ke mutabiq
+  },
 };
 
 export default adminService;

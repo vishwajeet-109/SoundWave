@@ -6,7 +6,7 @@ export default function AdminRoute({ children }) {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const isAuthenticated = !!token;
-  const isAdmin = user?.role === "admin" || user?.role === "superadmin";
+  const isAdmin = user?.role === "admin" || user?.role === "super_admin" || user?.role === "moderator";
 
   if (!isAuthenticated || !isAdmin) {
     return <Navigate to="/login" replace />;
