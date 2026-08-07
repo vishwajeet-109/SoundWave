@@ -89,5 +89,5 @@ const EmptyState = memo(({
 });
 
 EmptyState.displayName = "EmptyState";
-
+export { EmptyState };
 export default EmptyState;

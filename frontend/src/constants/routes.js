@@ -28,6 +28,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
 
   ADMIN: "/admin",
+  ARTIST_DASHBOARD: '/artist/dashboard',
 
   NOT_FOUND: "*",
 };

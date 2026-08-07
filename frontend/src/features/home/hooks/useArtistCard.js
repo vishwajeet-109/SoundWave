@@ -1,32 +1,100 @@
-import { useMemo } from "react";
-import { useMediaCardBase } from "./useMediaCardBase";
+import { useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-const PLACEHOLDER =
-  "https://placehold.co/500x500/18181b/ffffff?text=Artist";
+import { usePlayerContext } from "@/context/PlayerContext";
 
-export function useArtistCard({ artist, onPlay }) {
-  const artistName = useMemo(() => artist?.name || "Unknown Artist", [artist]);
+const DEFAULT_IMAGE =
+  "https://placehold.co/500x500/171717/ffffff?text=Artist";
 
-  const monthlyListeners = useMemo(() => artist?.monthlyListeners || null, [artist]);
+export function useArtistCard({
+  artist,
+  onPlay,
+}) {
+  const navigate = useNavigate();
 
-  const followers = useMemo(() => artist?.followers || null, [artist]);
+  const { playSong } = usePlayerContext();
 
-  const baseCard = useMediaCardBase({
-    item: artist,
-    itemType: "artist",
-    placeholder: PLACEHOLDER,
-    navigatePath: (item) => (item?._id ? `/artists/${item._id}` : "/"),
-    onPlay,
-    playlist: [],
-    getPrimarySong: () => null,
-  });
+  const image = useMemo(() => {
+    return (
+      artist?.image ||
+      artist?.avatar ||
+      artist?.photo ||
+      artist?.profileImage ||
+      artist?.coverImage ||
+      DEFAULT_IMAGE
+    );
+  }, [artist]);
+
+  const artistName = useMemo(() => {
+    return (
+      artist?.name ||
+      artist?.artistName ||
+      artist?.username ||
+      "Unknown Artist"
+    );
+  }, [artist]);
+
+  const monthlyListeners = useMemo(() => {
+    return (
+      artist?.monthlyListeners ||
+      artist?.listeners ||
+      artist?.stats?.monthlyListeners ||
+      0
+    );
+  }, [artist]);
+
+  const followers = useMemo(() => {
+    return (
+      artist?.followersCount ||
+      artist?.followers ||
+      artist?.stats?.followers ||
+      0
+    );
+  }, [artist]);
+
+  const topSongs = useMemo(() => {
+    return (
+      artist?.topSongs ||
+      artist?.songs ||
+      artist?.tracks ||
+      []
+    );
+  }, [artist]);
+
+  const handleNavigate = useCallback(() => {
+    if (!artist?._id) return;
+
+    navigate(`/artist/${artist._id}`);
+  }, [navigate, artist]);
+
+  const handlePlay = useCallback(
+    (event) => {
+      event?.stopPropagation();
+
+      if (!topSongs.length) return;
+
+      playSong(topSongs[0], topSongs);
+
+      onPlay?.(artist);
+    },
+    [
+      topSongs,
+      playSong,
+      onPlay,
+      artist,
+    ]
+  );
 
   return {
-    image: baseCard.image,
+    image,
     artistName,
     monthlyListeners,
     followers,
-    handleNavigate: baseCard.handleNavigate,
-    handlePlay: baseCard.handlePlay,
+    topSongs,
+
+    handleNavigate,
+    handlePlay,
   };
 }
+
+export default useArtistCard;

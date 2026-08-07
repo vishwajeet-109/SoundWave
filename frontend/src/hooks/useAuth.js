@@ -1,5 +1,7 @@
 import useAuthStore from "@/store/authStore";
 
-export default function useAuth() {
+export function useAuth() {
   return useAuthStore();
 }
+
+export default useAuth;

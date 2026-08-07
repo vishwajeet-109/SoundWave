@@ -96,4 +96,5 @@ const ErrorState = memo(({
 
 ErrorState.displayName = "ErrorState";
 
+export { ErrorState };
 export default ErrorState;

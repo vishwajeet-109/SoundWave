@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Search, Bell, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Search, Bell, LogOut, Mic2, ShieldCheck } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 import useAuth from "@/hooks/useAuth";
 
@@ -13,13 +13,14 @@ export default function Header() {
   } = useAuth();
 
   const [search, setSearch] = useState("");
-
   const notificationCount = 0; // Backend se replace hoga
+
+  // Verify if user is allowed to see the Artist Dashboard
+  const isArtistOrAdmin = user?.role === 'artist' || user?.role === 'admin' || user?.role === 'super_admin';
 
   const handleLogout = async () => {
     try {
       await logout();
-
       navigate("/login", {
         replace: true,
       });
@@ -48,19 +49,16 @@ export default function Header() {
       "
     >
       {/* Left */}
-
       <div>
         <h2 className="text-2xl font-bold">
           SoundWave
         </h2>
-
         <p className="text-sm text-zinc-500">
           Premium Music Platform
         </p>
       </div>
 
       {/* Search */}
-
       <div
         className="
           hidden
@@ -88,9 +86,7 @@ export default function Header() {
           type="text"
           value={search}
           placeholder="Search songs, artists, albums..."
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
+          onChange={(e) => setSearch(e.target.value)}
           className="
             flex-1
             bg-transparent
@@ -102,11 +98,58 @@ export default function Header() {
       </div>
 
       {/* Right */}
-
       <div className="flex items-center gap-4">
 
-        {/* Notification */}
+        {/* ARTIST PORTAL BUTTON (Conditional) */}
+        {isArtistOrAdmin && (
+          <Link 
+            to="/artist/dashboard"
+            className="
+              hidden
+              md:flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-zinc-800
+              bg-zinc-900
+              px-4
+              py-2.5
+              text-sm
+              font-medium
+              text-zinc-300
+              transition-all
+              duration-200
+              hover:border-green-500
+              hover:text-green-500
+            "
+          >
+            <Mic2 size={16} />
+            Artist Portal
+          </Link>
+        )}
 
+        {/* ARTIST PORTAL BUTTON (Conditional) */}
+        {(user?.role === 'artist' || user?.role === 'super_admin') && (
+          <Link 
+            to="/artist/dashboard"
+            className="hidden md:flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:border-green-500 hover:text-green-500 transition-colors"
+          >
+            <Mic2 size={16} /> Artist Portal
+          </Link>
+        )}
+
+        {/* ADMIN PORTAL BUTTON (Conditional) */}
+        {(user?.role === 'admin' || user?.role === 'moderator' || user?.role === 'super_admin') && (
+          <Link 
+            to="/admin/approval"
+            className="hidden md:flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:border-blue-500 hover:text-blue-500 transition-colors"
+          >
+            <ShieldCheck size={16} /> Admin Portal
+          </Link>
+        )}
+
+        {/* Notification */}
         <button
           className="
             relative
@@ -146,7 +189,6 @@ export default function Header() {
         </button>
 
         {/* User */}
-
         <div className="flex items-center gap-3">
 
           <div
@@ -172,11 +214,9 @@ export default function Header() {
           </div>
 
           <div className="hidden lg:block">
-
             <h4 className="font-semibold">
               {user?.name || "Loading..."}
             </h4>
-
             <span
               className="
                 inline-flex
@@ -191,7 +231,6 @@ export default function Header() {
             >
               {user?.role || "Guest"}
             </span>
-
           </div>
 
           <button
@@ -210,11 +249,8 @@ export default function Header() {
           >
             <LogOut size={18} />
           </button>
-
         </div>
-
       </div>
-
     </header>
   );
 }

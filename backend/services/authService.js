@@ -30,8 +30,8 @@ class AuthService {
 
 
 
- async login(email, password, req) {
-
+async login(email, password, req) {
+    // 1. Find user and get password hash
     const user = await User.findOne({
         email: email.toLowerCase().trim(),
     }).select("+password");
@@ -40,46 +40,43 @@ class AuthService {
         throw new ApiError(401, "Invalid email or password");
     }
 
+    // 2. Compare password
     const isPasswordCorrect = await user.comparePassword(password);
 
     if (!isPasswordCorrect) {
         throw new ApiError(401, "Invalid email or password");
     }
 
+    // 3. Generate Tokens
     const accessToken = generateAccessToken(user);
-
     const refreshToken = generateRefreshToken(user);
 
+    // 4. Create Session
     await sessionService.create({
-
         user: user._id,
-
         refreshToken: hashToken(refreshToken),
-
         ip: req.ip,
-
         userAgent: req.headers["user-agent"],
-
         expiresAt: new Date(
             Date.now() + 30 * 24 * 60 * 60 * 1000
         )
-
     });
 
+    // 5. Update Last Login
     user.lastLogin = new Date();
-
     await user.save();
 
+    // ==========================================
+    // SECURITY FIX: Remove password before sending to frontend
+    // ==========================================
+    user.password = undefined;
+
+    // 6. Return secure response
     return {
-
         accessToken,
-
         refreshToken,
-
         user
-
     };
-
 }
 
 async logout(refreshToken){
