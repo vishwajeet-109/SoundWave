@@ -1,37 +1,46 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
 
-// Layouts
-import AppShell from "@/layouts/AppShell/AppShell";
-import AuthLayout from "@/features/auth/components/AuthLayout";
-import AdminLayout from "@/features/admin/components/AdminLayout";
-import { DashboardLayout } from "@/features/artist-dashboard/components/DashboardLayout";
+// Layout
+import AppShell from "@/layouts/AppShell";
 
 // Route Guards
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicRoute from "@/components/auth/PublicRoute";
 import { RoleRoute } from "@/components/auth/RoleRoute";
+import AdminRoute from "@/routes/AdminRoutes";
 
 // Auth
 import Login from "@/features/auth/pages/Login";
 import Register from "@/features/auth/pages/Register";
 
-// Home / User
+// Home
 import Home from "@/features/home/pages/Home";
+
+// Search
 import Search from "@/features/search/pages/Search";
-import Library from "@/features/library/pages/Library";
-import QueuePage from "@/features/home/pages/QueuePage";
-import ProfilePage from "@/features/home/pages/ProfilePage";
+
+// Albums
 import AlbumDetails from "@/features/albums/pages/AlbumDetails";
+
+// Artists
 import ArtistDetails from "@/features/home/pages/ArtistDetails";
+
+// Playlists
 import PlaylistDetails from "@/features/home/pages/PlaylistDetails";
 
-// Artist
+// Library
+import Library from "@/features/library/pages/Library";
+
+// Queue
+import QueuePage from "@/features/home/pages/QueuePage";
+
+// Profile
+import ProfilePage from "@/features/home/pages/ProfilePage";
+import CreateArtistPage from "@/features/admin/pages/CreateArtistPage"; 
 import { ArtistDashboard, UploadSong } from "@/features/artist-dashboard";
 
-// Admin
+// Admin Imports
 import { SongApproval, AdminDashboard } from "@/features/admin";
-import CreateArtistPage from "@/features/admin/pages/CreateArtistPage"; 
 
 export default function AppRouter() {
   return (
@@ -40,55 +49,71 @@ export default function AppRouter() {
             PUBLIC ROUTES
       ============================ */}
       <Route element={<PublicRoute />}>
-        <Route element={<AuthLayout />}>
-          <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.REGISTER} element={<Register />} />
-        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
 
       {/* ===========================
-            PROTECTED USER ROUTES
+            PROTECTED ROUTES
       ============================ */}
       <Route element={<ProtectedRoute />}>
+        {/* Main User Routes */}
         <Route element={<AppShell />}>
-          <Route path={ROUTES.HOME} element={<Home />} />
-          <Route path={ROUTES.SEARCH} element={<Search />} />
-          <Route path={ROUTES.LIBRARY} element={<Library />} />
-          <Route path={ROUTES.QUEUE} element={<QueuePage />} />
-          <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-          <Route path={`${ROUTES.ALBUMS}/:id`} element={<AlbumDetails />} />
-          <Route path={`${ROUTES.ARTISTS}/:id`} element={<ArtistDetails />} />
-          <Route path={`${ROUTES.PLAYLISTS}/:id`} element={<PlaylistDetails />} />
+          <Route index element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/queue" element={<QueuePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/albums/:id" element={<AlbumDetails />} />
+          <Route path="/artists/:id" element={<ArtistDetails />} />
+          <Route path="/playlists/:id" element={<PlaylistDetails />} />
         </Route>
-      </Route>
 
-      {/* ======================
-            ARTIST ROUTES
-      ======================== */}
-      <Route element={<RoleRoute allowedRoles={["artist", "admin", "super_admin"]} />}>
-        {/* FIX: Mount the Layout here so the Sidebar renders! */}
-        <Route element={<DashboardLayout />}>
-          <Route path={ROUTES.ARTIST_DASHBOARD} element={<ArtistDashboard />} />
-          <Route path={ROUTES.ARTIST_UPLOAD} element={<UploadSong />} />
+        {/* ======================
+                    Artist
+        ================------- */}
+        <Route
+          element={
+            <RoleRoute allowedRoles={["artist", "admin", "super_admin"]} />
+          }
+        >
+          <Route path="/artist/dashboard" element={<ArtistDashboard />} />
+          <Route path="/artist/upload" element={<UploadSong />} />
         </Route>
-      </Route>
+{/* ======================
+                    Admin
+        ======================= */}
+        <Route
+          element={
+            <RoleRoute allowedRoles={["admin", "super_admin", "moderator"]} />
+          }
+        >
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/approval" element={<SongApproval />} />
+          
+          
+        </Route>
 
-      {/* ======================
-            ADMIN ROUTES
-      ======================= */}
-      <Route element={<RoleRoute allowedRoles={["admin", "super_admin", "moderator"]} />}>
-        {/* FIX: Mount the Admin Layout here! */}
-        <Route element={<AdminLayout />}>
-          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
-          <Route path={ROUTES.ADMIN_APPROVALS} element={<SongApproval />} />
-          <Route path={ROUTES.ADMIN_CREATE_ARTIST} element={<CreateArtistPage />} />
-        </Route>
+        {/* =========================== 
+            Artist Creation Route (Secured with AdminRoute)
+        ============================ */}
+        <Route
+          path="/admin/create-artist"
+          element={
+            <AdminRoute>
+              <CreateArtistPage />
+            </AdminRoute>
+          }
+        />
+
+        
+      
       </Route>
 
       {/* ===========================
             FALLBACK
       ============================ */}
-      <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
