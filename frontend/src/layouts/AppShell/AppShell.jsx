@@ -1,36 +1,32 @@
-import { Outlet } from "react-router-dom";
-
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
+import  RightSidebar from '@/components/layout/RightSidebar';
 import Header from "@/components/layout/Header";
-import RightSidebar from "@/components/layout/RightSidebar";
-import MusicPlayer from "@/components/player/MusicPlayer";
+import  MusicPlayer from '@/components/player/MusicPlayer';
 
-import useAuth from "@/hooks/useAuth";
-
-export default function AppShell() {
-  const { user } = useAuth();
-
+export const AppShell = () => {
   return (
-    <div className="flex h-screen bg-zinc-950 text-white">
+    <div className="h-screen w-screen overflow-hidden bg-[#080808] text-[#FAFAFA] flex flex-col">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Navigation Sidebar */}
+        <Sidebar />
 
-      <Sidebar role={user?.role} />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden bg-[#111111]">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-6">
+            <Outlet />
+          </main>
+        </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
-
-        <Header />
-
-        <main className="flex-1 overflow-y-auto bg-zinc-950 px-6 py-5">
-          <Outlet />
-        </main>
-
-        <MusicPlayer />
-
-      </div>
-
-      <div className="hidden 2xl:block">
+        {/* Right Contextual Sidebar */}
         <RightSidebar />
       </div>
 
+      {/* Persistent Music Player */}
+      <MusicPlayer />
     </div>
   );
-}
+};
+export { default } from "./AppShell";

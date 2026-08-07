@@ -1,166 +1,71 @@
 import { create } from "zustand";
-
 import authService from "@/services/authService";
-import { storage } from "@/utils/storage";
 
 const useAuthStore = create((set, get) => ({
-  user: storage.getUser(),
-  accessToken: storage.getToken(),
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
 
-  loading: false,
-  initialized: false,
-
-  isAuthenticated: !!storage.getToken(),
-
-  // ======================
-  // LOGIN (FIXED)
-  // ======================
-
-  login: async (emailOrCredentials, password) => {
-    set({ loading: true });
+  login: async (credentials, portalRole) => {
+    set({ isLoading: true, error: null });
 
     try {
-      // Handle both object { email, password } and separate (email, password) arguments
-      let credentials = emailOrCredentials;
-      if (typeof emailOrCredentials === 'string' && password) {
-        credentials = { email: emailOrCredentials, password };
-      }
-
       const response = await authService.login(credentials);
 
-      const { accessToken, user } = response.data.data;
+      const user = response.user || response.data?.user;
+      const userRole = user?.role;
 
-      storage.setToken(accessToken);
-      storage.setUser(user);
+      if (portalRole === "user" && userRole !== "user") {
+        throw new Error("You are not authorized to login from this page.");
+      }
 
-      set({
-        user,
-        accessToken,
-        isAuthenticated: true,
-        initialized: true,
-        loading: false,
-      });
+      if (portalRole === "artist" && userRole !== "artist") {
+        throw new Error("Access denied. Artist credentials required.");
+      }
 
-      return response.data;
-    } catch (error) {
-      set({
-        loading: false,
-      });
-
-      throw error;
-    }
-  },
-
-  // ======================
-  // REGISTER
-  // ======================
-
-  register: async (data) => {
-    set({ loading: true });
-
-    try {
-      const response = await authService.register(data);
-
-      set({
-        loading: false,
-      });
-
-      return response.data;
-    } catch (error) {
-      set({
-        loading: false,
-      });
-
-      throw error;
-    }
-  },
-
-  // ======================
-  // FETCH CURRENT USER
-  // ======================
-
-  fetchCurrentUser: async () => {
-    try {
-      const response = await authService.getMe();
-
-      const user = response.data.data;
-
-      storage.setUser(user);
+      if (
+        portalRole === "admin" &&
+        userRole !== "admin" &&
+        userRole !== "super_admin"
+      ) {
+        throw new Error("Access denied. Admin credentials required.");
+      }
 
       set({
         user,
-        initialized: true,
+        token: response.token || response.data?.token,
         isAuthenticated: true,
+        isLoading: false,
       });
 
-      return user;
+      return { success: true, role: userRole };
     } catch (error) {
-      storage.clear();
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Login failed";
 
       set({
-        user: null,
-        accessToken: null,
-        initialized: true,
-        isAuthenticated: false,
+        error: message,
+        isLoading: false,
       });
 
-      throw error;
+      return {
+        success: false,
+        message,
+      };
     }
   },
 
-  // ======================
-  // INITIALIZE APP
-  // ======================
-
-  initialize: async () => {
-    const token = storage.getToken();
-
-    if (!token) {
-      set({
-        initialized: true,
-        isAuthenticated: false,
-      });
-
-      return;
-    }
-
-    try {
-      await get().fetchCurrentUser();
-    } catch {
-      // handled in fetchCurrentUser
-    }
-  },
-
-  // ======================
-  // LOGOUT
-  // ======================
-
-  logout: async () => {
-    try {
-      await authService.logout();
-    } catch {
-      // Ignore logout API failure
-    }
-
-    storage.clear();
+  logout: () => {
+    authService.logout();
 
     set({
       user: null,
-      accessToken: null,
+      token: null,
       isAuthenticated: false,
-      initialized: true,
-    });
-  },
-
-  // ======================
-  // UPDATE USER
-  // ======================
-
-  updateUser: (user) => {
-    storage.setUser(user);
-
-    set({
-      user,
     });
   },
 }));

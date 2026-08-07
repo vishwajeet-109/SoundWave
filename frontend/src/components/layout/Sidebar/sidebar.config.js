@@ -1,44 +1,43 @@
 import { ROUTES } from '@/constants/routes';
 
-export const sidebarConfig = {
-  user: [
-    { title: 'Home', path: ROUTES.HOME, icon: 'HomeIcon' },
-    { title: 'Search', path: ROUTES.SEARCH, icon: 'SearchIcon' },
-    { title: 'Library', path: ROUTES.LIBRARY, icon: 'LibraryIcon' },
-    { title: 'Liked Songs', path: '/liked', icon: 'HeartIcon' },
-    { title: 'Playlists', path: '/playlists', icon: 'PlaylistIcon' },
-    { title: 'Albums', path: '/albums', icon: 'AlbumIcon' },
-    { title: 'Artists', path: '/artists', icon: 'MicIcon' },
-    { title: 'Profile', path: ROUTES.PROFILE, icon: 'UserIcon' },
-    { title: 'Queue', path: ROUTES.QUEUE, icon: 'QueueIcon' },
-    { title: 'History', path: '/history', icon: 'HistoryIcon' },
-    { title: 'Settings', path: '/settings', icon: 'SettingsIcon' },
-  ],
-  artist: [
-    { title: 'Dashboard', path: ROUTES.ARTIST_DASHBOARD, icon: 'DashboardIcon' },
-    { title: 'Analytics', path: '/artist/analytics', icon: 'ChartIcon' },
-    { title: 'My Songs', path: '/artist/songs', icon: 'MusicIcon' },
-    { title: 'My Albums', path: '/artist/albums', icon: 'AlbumIcon' },
-    { title: 'Upload Song', path: ROUTES.ARTIST_UPLOAD, icon: 'UploadIcon' },
-    { title: 'Upload Album', path: '/artist/upload-album', icon: 'UploadCloudIcon' },
-    { title: 'Revenue', path: '/artist/revenue', icon: 'DollarIcon' },
-    { title: 'Followers', path: '/artist/followers', icon: 'UsersIcon' },
-    { title: 'Profile', path: '/artist/profile', icon: 'UserIcon' },
-    { title: 'Notifications', path: '/artist/notifications', icon: 'BellIcon' },
-    { title: 'Settings', path: '/artist/settings', icon: 'SettingsIcon' },
-  ],
-  admin: [
-    { title: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: 'DashboardIcon' },
-    { title: 'Approvals', path: ROUTES.ADMIN_APPROVALS, icon: 'CheckIcon' },
-    { title: 'Users', path: ROUTES.ADMIN_USERS, icon: 'UsersIcon' },
-    { title: 'Artists', path: '/admin/artists', icon: 'MicIcon' },
-    { title: 'Create Artist', path: ROUTES.ADMIN_CREATE_ARTIST, icon: 'PlusCircleIcon' },
-    { title: 'Songs', path: '/admin/songs', icon: 'MusicIcon' },
-    { title: 'Albums', path: '/admin/albums', icon: 'AlbumIcon' },
-    { title: 'Categories', path: '/admin/categories', icon: 'CategoryIcon' },
-    { title: 'Genres', path: '/admin/genres', icon: 'GenreIcon' },
-    { title: 'Reports', path: ROUTES.ADMIN_REPORTS, icon: 'FlagIcon' },
-    { title: 'Analytics', path: '/admin/analytics', icon: 'ChartIcon' },
-    { title: 'Settings', path: '/admin/settings', icon: 'SettingsIcon' },
-  ]
-};
+export const USER_NAV = [
+  { label: 'Home', path: ROUTES.HOME, icon: 'Home' },
+  { label: 'Search', path: ROUTES.SEARCH, icon: 'Search' },
+  { label: 'Library', path: ROUTES.LIBRARY, icon: 'Library' },
+  { label: 'Liked Songs', path: ROUTES.LIKED_SONGS, icon: 'Heart' },
+  { label: 'Albums', path: ROUTES.ALBUMS, icon: 'Disc' },
+  { label: 'Artists', path: ROUTES.ARTISTS, icon: 'Mic' },
+  { label: 'Playlists', path: ROUTES.PLAYLISTS, icon: 'List' },
+  { label: 'Queue', path: ROUTES.QUEUE, icon: 'Queue' },
+  { label: 'History', path: ROUTES.HISTORY, icon: 'Clock' },
+  { label: 'Profile', path: ROUTES.PROFILE, icon: 'User' },
+  { label: 'Settings', path: ROUTES.SETTINGS, icon: 'Settings' },
+];
+
+export const ARTIST_NAV = [
+  { label: 'Dashboard', path: ROUTES.ARTIST_DASHBOARD, icon: 'LayoutDashboard' },
+  { label: 'Analytics', path: ROUTES.ARTIST_ANALYTICS, icon: 'BarChart' },
+  { label: 'Upload Song', path: ROUTES.ARTIST_UPLOAD_SONG, icon: 'Upload' },
+  { label: 'Upload Album', path: ROUTES.ARTIST_UPLOAD_ALBUM, icon: 'FolderPlus' },
+  { label: 'My Songs', path: ROUTES.ARTIST_SONGS, icon: 'Music' },
+  { label: 'My Albums', path: ROUTES.ARTIST_ALBUMS, icon: 'Disc' },
+  { label: 'Followers', path: ROUTES.ARTIST_FOLLOWERS, icon: 'Users' },
+  { label: 'Revenue', path: ROUTES.ARTIST_REVENUE, icon: 'DollarSign' },
+  { label: 'Profile', path: ROUTES.ARTIST_PROFILE, icon: 'User' },
+  { label: 'Notifications', path: ROUTES.ARTIST_NOTIFICATIONS, icon: 'Bell' },
+  { label: 'Settings', path: ROUTES.ARTIST_SETTINGS, icon: 'Settings' },
+];
+
+export const ADMIN_NAV = [
+  { label: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: 'LayoutDashboard' },
+  { label: 'Approvals', path: ROUTES.ADMIN_APPROVALS, icon: 'CheckSquare' },
+  { label: 'Users', path: ROUTES.ADMIN_USERS, icon: 'Users' },
+  { label: 'Artists', path: ROUTES.ADMIN_ARTISTS, icon: 'Mic' },
+  { label: 'Songs', path: ROUTES.ADMIN_SONGS, icon: 'Music' },
+  { label: 'Albums', path: ROUTES.ADMIN_ALBUMS, icon: 'Disc' },
+  { label: 'Categories', path: ROUTES.ADMIN_CATEGORIES, icon: 'Grid' },
+  { label: 'Genres', path: ROUTES.ADMIN_GENRES, icon: 'Tag' },
+  { label: 'Reports', path: ROUTES.ADMIN_REPORTS, icon: 'AlertTriangle' },
+  { label: 'Analytics', path: ROUTES.ADMIN_ANALYTICS, icon: 'TrendingUp' },
+  { label: 'Settings', path: ROUTES.ADMIN_SETTINGS, icon: 'Settings' },
+];

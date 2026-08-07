@@ -1,35 +1,31 @@
 import React from 'react';
-import { sidebarConfig } from './sidebar.config';
-import SidebarItem from './SidebarItem';
-import SidebarLogo from './SidebarLogo';
-import useAuth from '@/hooks/useAuth'; // Using your custom hook
+import { useAuth } from '@/hooks/useAuth';
+import { USER_NAV, ARTIST_NAV, ADMIN_NAV } from './sidebar.config';
+import SidebarItem from "./SidebarItem";
+import SidebarLogo from "./SidebarLogo";
 
-const Sidebar = () => {
+export const Sidebar = () => {
   const { user } = useAuth();
-  
-  // Identify the role. Fallback to 'user' if not logged in or role is missing
-  const userRole = user?.role === 'super_admin' || user?.role === 'moderator' 
-    ? 'admin' 
-    : (user?.role || 'user'); 
-  
-  // Dynamically select the correct array from the config
-  const navItems = sidebarConfig[userRole] || sidebarConfig.user;
+  const role = user?.role || 'user';
+
+  const getNavItems = () => {
+    if (role === 'admin' || role === 'super_admin') return ADMIN_NAV;
+    if (role === 'artist') return ARTIST_NAV;
+    return USER_NAV;
+  };
+
+  const navItems = getNavItems();
 
   return (
-    <aside className="w-64 h-screen flex flex-col bg-zinc-950 border-r border-zinc-800 shrink-0">
+    <aside className="w-64 bg-[#080808] border-r border-[#2A2A2A] flex flex-col h-full select-none">
       <SidebarLogo />
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {navItems.map((item) => (
-          <SidebarItem 
-            key={item.title} 
-            title={item.title} 
-            path={item.path} 
-            icon={item.icon} 
-          />
+          <SidebarItem key={item.path} item={item} />
         ))}
       </nav>
     </aside>
   );
 };
 
-export default Sidebar;
+  export default Sidebar;

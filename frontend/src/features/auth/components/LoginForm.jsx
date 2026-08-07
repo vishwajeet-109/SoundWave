@@ -30,17 +30,33 @@ const LoginForm = () => {
 
     try {
       const user = await login(formData.email, formData.password);
+      const userRole = user?.role;
 
-      // Smart Redirection based on actual backend role using Constants
-      if (user?.role === 'admin' || user?.role === 'super_admin' || user?.role === 'moderator') {
+      // Strict Role-Based Portal Validation (Issue 4)
+      if (selectedRole === 'user' && userRole !== 'user') {
+        throw new Error('You are not authorized to login from this page.');
+      }
+      if (selectedRole === 'artist' && userRole !== 'artist') {
+        throw new Error('Access denied. Only artist accounts can login here.');
+      }
+      if (selectedRole === 'admin' && userRole !== 'admin' && userRole !== 'super_admin' && userRole !== 'moderator') {
+        throw new Error('Access denied. Only administrator accounts can login here.');
+      }
+
+      // Strict Portal Redirection
+      if (userRole === 'admin' || userRole === 'super_admin' || userRole === 'moderator') {
         navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
-      } else if (user?.role === 'artist') {
+      } else if (userRole === 'artist') {
         navigate(ROUTES.ARTIST_DASHBOARD, { replace: true });
       } else {
         navigate(ROUTES.HOME, { replace: true });
       }
     } catch (err) {
-      setError(err?.response?.data?.message || 'Invalid email or password. Please try again.');
+      setError(
+        err?.message || 
+        err?.response?.data?.message || 
+        'Invalid email or password. Please try again.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -60,6 +76,7 @@ const LoginForm = () => {
         <div className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 p-6 rounded-2xl shadow-2xl space-y-4">
           
           <button 
+            type="button"
             onClick={() => setSelectedRole('user')}
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:border-green-500 hover:bg-green-500/5 transition-all text-left group"
           >
@@ -73,6 +90,7 @@ const LoginForm = () => {
           </button>
 
           <button 
+            type="button"
             onClick={() => setSelectedRole('artist')}
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:border-blue-500 hover:bg-blue-500/5 transition-all text-left group"
           >
@@ -86,6 +104,7 @@ const LoginForm = () => {
           </button>
 
           <button 
+            type="button"
             onClick={() => setSelectedRole('admin')}
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:border-red-500 hover:bg-red-500/5 transition-all text-left group"
           >
@@ -117,6 +136,7 @@ const LoginForm = () => {
     <div className="w-full max-w-md mx-auto">
       
       <button 
+        type="button"
         onClick={() => {
           setSelectedRole(null);
           setError('');

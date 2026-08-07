@@ -1,26 +1,48 @@
 export const ROUTES = {
-  // Auth
-  LOGIN: '/login',
-  REGISTER: '/register',
-  
-  // User
-  HOME: '/',
+  HOME: '/home',
   SEARCH: '/search',
   LIBRARY: '/library',
-  PROFILE: '/profile',
-  QUEUE: '/queue',
+  LIKED_SONGS: '/library/liked',
   ALBUMS: '/albums',
+  ALBUM_DETAILS: '/albums/:id',
   ARTISTS: '/artists',
+  ARTIST_DETAILS: '/artists/:id',
   PLAYLISTS: '/playlists',
+  PLAYLIST_DETAILS: '/playlists/:id',
+  QUEUE: '/queue',
+  HISTORY: '/history',
+  PROFILE: '/profile',
+  SETTINGS: '/settings',
 
-  // Artist
+  // Artist Routes
   ARTIST_DASHBOARD: '/artist/dashboard',
-  ARTIST_UPLOAD: '/artist/upload',
+  ARTIST_ANALYTICS: '/artist/analytics',
+  ARTIST_UPLOAD_SONG: '/artist/upload-song',
+  ARTIST_UPLOAD_ALBUM: '/artist/upload-album',
+  ARTIST_SONGS: '/artist/songs',
+  ARTIST_ALBUMS: '/artist/albums',
+  ARTIST_FOLLOWERS: '/artist/followers',
+  ARTIST_REVENUE: '/artist/revenue',
+  ARTIST_PROFILE: '/artist/profile',
+  ARTIST_NOTIFICATIONS: '/artist/notifications',
+  ARTIST_SETTINGS: '/artist/settings',
 
-  // Admin
-  ADMIN_DASHBOARD: '/admin',
-  ADMIN_APPROVALS: '/admin/approval',
-  ADMIN_CREATE_ARTIST: '/admin/create-artist',
-  ADMIN_REPORTS: '/admin/reports', // Assuming you'll add this
-  ADMIN_USERS: '/admin/users',     // Assuming you'll add this
+  // Admin Routes
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_APPROVALS: '/admin/approvals',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_ARTISTS: '/admin/artists',
+  ADMIN_SONGS: '/admin/songs',
+  ADMIN_ALBUMS: '/admin/albums',
+  ADMIN_CATEGORIES: '/admin/categories',
+  ADMIN_GENRES: '/admin/genres',
+  ADMIN_REPORTS: '/admin/reports',
+  ADMIN_ANALYTICS: '/admin/analytics',
+  ADMIN_SETTINGS: '/admin/settings',
+
+  // Auth Portals
+  LOGIN: '/login',
+  ARTIST_LOGIN: '/artist/login',
+  ADMIN_LOGIN: '/admin/login',
+  REGISTER: '/register',
 };
