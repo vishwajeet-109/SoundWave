@@ -1,18 +1,16 @@
 import MusicCard from "@/features/home/components/MusicCard";
+import { useAlbumResultCard } from "../../hooks/useAlbumResultCard";
 
 export default function AlbumResultCard({
   album,
   onPlay,
 }) {
+  const { song, handlePlay } = useAlbumResultCard({ album, onPlay });
+
   return (
     <MusicCard
-      song={{
-        _id: album._id,
-        title: album.title,
-        coverImage: album.coverImage,
-        artist: album.artist,
-      }}
-      onPlay={() => onPlay?.(album)}
+      song={song}
+      onPlay={handlePlay}
     />
   );
 }

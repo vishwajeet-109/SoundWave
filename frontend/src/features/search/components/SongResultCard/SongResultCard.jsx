@@ -1,14 +1,17 @@
 import { Play } from "lucide-react";
+import { useSongResultCard } from "../../hooks/useSongResultCard";
 
 export default function SongResultCard({ song }) {
+  const { cover, title, artist } = useSongResultCard({ song });
+
   return (
     <div className="group rounded-2xl bg-zinc-900 p-4 transition-all duration-300 hover:bg-zinc-800 hover:-translate-y-1">
 
       <div className="relative overflow-hidden rounded-xl">
 
         <img
-          src={song.cover}
-          alt={song.title}
+          src={cover}
+          alt={title}
           className="aspect-square w-full object-cover"
         />
 
@@ -39,11 +42,11 @@ export default function SongResultCard({ song }) {
       </div>
 
       <h3 className="mt-4 font-semibold text-white">
-        {song.title}
+        {title}
       </h3>
 
       <p className="text-sm text-zinc-400">
-        {song.artist}
+        {artist}
       </p>
 
     </div>
