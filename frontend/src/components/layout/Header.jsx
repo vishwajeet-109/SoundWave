@@ -129,15 +129,9 @@ export default function Header() {
           </Link>
         )}
 
-        {/* ARTIST PORTAL BUTTON (Conditional) */}
-        {(user?.role === 'artist' || user?.role === 'super_admin') && (
-          <Link 
-            to="/artist/dashboard"
-            className="hidden md:flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:border-green-500 hover:text-green-500 transition-colors"
-          >
-            <Mic2 size={16} /> Artist Portal
-          </Link>
-        )}
+        {/* NOTE: Removed duplicate Artist Portal button. The first conditional above
+            already covers artist/super_admin/admin visibility. Keeping a single
+            Artist Portal entry to avoid duplicate rendering. */}
 
         {/* ADMIN PORTAL BUTTON (Conditional) */}
         {(user?.role === 'admin' || user?.role === 'moderator' || user?.role === 'super_admin') && (

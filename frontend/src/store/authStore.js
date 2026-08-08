@@ -35,10 +35,15 @@ const useAuthStore = create((set, get) => ({
       const response = await authService.getMe();
       const user = response?.user || response?.data?.user || null;
 
+      // Normalize role to lowercase so UI role checks are consistent
+      const normalizedUser = user
+        ? { ...user, role: String(user.role || "").toLowerCase() }
+        : null;
+
       set({
-        user,
+        user: normalizedUser,
         token: response?.token || response?.data?.token || token,
-        isAuthenticated: Boolean(user),
+        isAuthenticated: Boolean(normalizedUser),
         initialized: true,
         isLoading: false,
         error: null,
@@ -154,8 +159,11 @@ login: async (credentials, password, portalRole) => {
       localStorage.setItem("accessToken", accessToken);
     }
 
+    // Normalize role to lowercase for consistent checks across components
+    const normalizedUserLogin = { ...user, role: String(user.role || "").toLowerCase() };
+
     set({
-      user,
+      user: normalizedUserLogin,
       token: accessToken,
       isAuthenticated: true,
       initialized: true,

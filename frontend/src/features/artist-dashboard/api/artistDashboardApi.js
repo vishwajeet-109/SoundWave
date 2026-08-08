@@ -3,7 +3,11 @@ import { API_ENDPOINTS } from '@/constants/apiEndpoints';
 
 export const artistDashboardApi = {
   getStats: async () => {
-    const response = await axiosInstance.get(API_ENDPOINTS.DASHBOARD.STATS);
+    // Use the artist-specific dashboard endpoint. The admin `stats` endpoint
+    // requires admin/super_admin roles and caused artists to receive a 403,
+    // which produced the ErrorState in the Artist Dashboard. Use the
+    // artist-only route to fetch artist dashboard data.
+    const response = await axiosInstance.get('/dashboard/artist');
     return response.data;
   },
   getRecentUploads: async (artistId) => {

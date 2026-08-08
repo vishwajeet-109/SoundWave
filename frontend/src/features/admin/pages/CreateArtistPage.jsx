@@ -7,6 +7,7 @@ export default function CreateArtistPage() {
     email: "",
     bio: "",
     genre: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -23,7 +24,7 @@ export default function CreateArtistPage() {
     try {
       await adminService.createArtist(formData);
       setMessage({ type: "success", text: "Artist created successfully!" });
-      setFormData({ name: "", email: "", bio: "", genre: "" });
+      setFormData({ name: "", email: "", bio: "", genre: "", password: "" });
     } catch (err) {
       setMessage({ 
         type: "error", 
@@ -61,12 +62,25 @@ export default function CreateArtistPage() {
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
           <input 
-            type="email_id" 
+            type="email" 
             name="email" 
             value={formData.email} 
             onChange={handleChange} 
             required 
             placeholder="artist@soundwave.com"
+            className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            placeholder="Create a secure password"
             className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-indigo-500 text-white"
           />
         </div>

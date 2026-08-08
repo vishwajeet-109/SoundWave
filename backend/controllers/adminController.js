@@ -15,27 +15,18 @@ class AdminController {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    let user = await User.findOne({ email: normalizedEmail });
+    const existingUser = await User.findOne({ email: normalizedEmail });
 
-    if (user) {
-      user.role = ROLES.ARTIST || "artist";
-      user.status = USER_STATUS.ACTIVE || "active";
-      if (bio) user.bio = bio;
-      if (genre) user.genre = genre;
-      await user.save();
-      
-      user.password = undefined;
-      return res.status(200).json(
-        new ApiResponse(200, "User upgraded to Artist successfully", user)
-      );
+    if (existingUser) {
+      throw new ApiError(409, "Email already exists");
     }
 
     const newArtist = await User.create({
       name,
       email: normalizedEmail,
       password,
-      role: ROLES.ARTIST || "artist",
-      status: USER_STATUS.ACTIVE || "active",
+      role: ROLES.ARTIST,
+      status: USER_STATUS.ACTIVE,
       emailVerified: true,
       bio: bio || "",
       genre: genre || ""

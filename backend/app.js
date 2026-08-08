@@ -22,6 +22,7 @@ import recommendationRoutes from "./routes/recommendationRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import queueRoutes from "./routes/queueRoutes.js";
 import playbackRoutes from "./routes/playbackRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import { sanitizeRequest } from "./middleware/sanitizeMiddleware.js";
 import { compressionMiddleware, hppMiddleware, performanceMiddleware } from "./middleware/performanceMiddleware.js";
@@ -52,6 +53,7 @@ app.use(morgan("dev"));
 
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/admin", approvalRoutes);
+app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/songs", songRoutes);
