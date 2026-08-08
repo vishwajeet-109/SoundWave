@@ -1,5 +1,24 @@
 import React from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  Outlet,
+} from "react-router-dom";
+
+// External Route Modules & Guards
+import {
+  ProtectedRoute,
+  DynamicFallback,
+  RootIndexRedirect,
+} from "./routes/ProtectedRoute";
+
+import { ArtistRoutes } from "./routes/ArtistRoutes";
+
+// -----------------------------------------------------------------------------
+// Navigation Data
+// -----------------------------------------------------------------------------
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -39,6 +58,10 @@ const featuredPlaylists = [
   { title: "Late Night", subtitle: "32 songs", path: "/playlists/late-night" },
 ];
 
+// -----------------------------------------------------------------------------
+// Placeholder Page
+// -----------------------------------------------------------------------------
+
 function PlaceholderPage({ title, subtitle }) {
   return (
     <section className="section-card">
@@ -59,13 +82,19 @@ function PlaceholderPage({ title, subtitle }) {
   );
 }
 
+// -----------------------------------------------------------------------------
+// Sidebar
+// -----------------------------------------------------------------------------
+
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
 
   return (
     <aside className="sidebar">
-      <div className="brand">SoundWave</div>
+      <div className="brand" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+        SoundWave
+      </div>
 
       <div className="nav-list">
         {navItems.map((item) => (
@@ -88,16 +117,12 @@ function Sidebar() {
   );
 }
 
+// -----------------------------------------------------------------------------
+// Topbar
+// -----------------------------------------------------------------------------
+
 function Topbar() {
   const navigate = useNavigate();
-
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const handleForward = () => {
-    navigate(1);
-  };
 
   return (
     <header className="topbar">
@@ -108,19 +133,27 @@ function Topbar() {
 
       <div className="topbar-actions">
         <div className="history-buttons">
-          <button type="button" className="history-btn" onClick={handleBack} aria-label="Go back">
+          <button type="button" className="history-btn" onClick={() => navigate(-1)} aria-label="Go back">
             ←
           </button>
-          <button type="button" className="history-btn" onClick={handleForward} aria-label="Go forward">
+          <button type="button" className="history-btn" onClick={() => navigate(1)} aria-label="Go forward">
             →
           </button>
         </div>
-        <button type="button" className="search-pill" onClick={() => navigate("/search")}>Search tracks, artists...</button>
-        <button type="button" className="profile-pill" onClick={() => navigate("/profile")}>A</button>
+        <button type="button" className="search-pill" onClick={() => navigate("/search")}>
+          Search tracks, artists...
+        </button>
+        <button type="button" className="profile-pill" onClick={() => navigate("/profile")}>
+          A
+        </button>
       </div>
     </header>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Hero
+// -----------------------------------------------------------------------------
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -136,13 +169,21 @@ function HeroSection() {
         </p>
 
         <div className="hero-actions">
-          <button type="button" className="btn btn-primary" onClick={() => navigate("/albums/featured")}>Play Now</button>
-          <button type="button" className="btn btn-secondary" onClick={() => navigate("/queue")}>View Queue</button>
+          <button type="button" className="btn btn-primary" onClick={() => navigate("/albums/featured")}>
+            Play Now
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={() => navigate("/queue")}>
+            View Queue
+          </button>
         </div>
       </div>
     </section>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Section Card
+// -----------------------------------------------------------------------------
 
 function SectionCard({ title, items, type = "list", navigateTo }) {
   const navigate = useNavigate();
@@ -176,6 +217,10 @@ function SectionCard({ title, items, type = "list", navigateTo }) {
     </section>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Bottom Player
+// -----------------------------------------------------------------------------
 
 function BottomPlayer() {
   return (
@@ -211,11 +256,14 @@ function BottomPlayer() {
   );
 }
 
+// -----------------------------------------------------------------------------
+// Home Content
+// -----------------------------------------------------------------------------
+
 function HomeContent() {
   return (
     <>
       <HeroSection />
-
       <SectionCard title="Recently Played" items={recentlyPlayed} navigateTo="/library" />
       <SectionCard title="Trending Songs" items={trendingSongs} type="song" navigateTo="/discover" />
       <SectionCard title="Popular Artists" items={popularArtists} navigateTo="/artists" />
@@ -225,37 +273,58 @@ function HomeContent() {
   );
 }
 
-function AppShell({ children }) {
+// -----------------------------------------------------------------------------
+// App Shell
+// -----------------------------------------------------------------------------
+
+function AppShell() {
   return (
     <div className="app-shell">
       <Sidebar />
-
       <div className="content-area">
         <Topbar />
-
-        <main className="main-content">{children}</main>
-
+        <main className="main-content">
+          <Outlet />
+        </main>
         <BottomPlayer />
       </div>
     </div>
   );
 }
 
+// -----------------------------------------------------------------------------
+// Main App Router
+// -----------------------------------------------------------------------------
+
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<AppShell><HomeContent /></AppShell>} />
-      <Route path="/discover" element={<AppShell><PlaceholderPage title="Discover" subtitle="Loading discover content..." /></AppShell>} />
-      <Route path="/search" element={<AppShell><PlaceholderPage title="Search" subtitle="Loading search results..." /></AppShell>} />
-      <Route path="/library" element={<AppShell><PlaceholderPage title="Library" subtitle="Loading your library..." /></AppShell>} />
-      <Route path="/queue" element={<AppShell><PlaceholderPage title="Queue" subtitle="Loading your queue..." /></AppShell>} />
-      <Route path="/profile" element={<AppShell><PlaceholderPage title="Profile" subtitle="Loading your profile..." /></AppShell>} />
-      <Route path="/playlists" element={<AppShell><PlaceholderPage title="Playlists" subtitle="Loading playlists..." /></AppShell>} />
-      <Route path="/artists" element={<AppShell><PlaceholderPage title="Artists" subtitle="Loading artists..." /></AppShell>} />
-      <Route path="/albums/:id" element={<AppShell><PlaceholderPage title="Album Details" subtitle="Loading album..." /></AppShell>} />
-      <Route path="/artists/:id" element={<AppShell><PlaceholderPage title="Artist Details" subtitle="Loading artist..." /></AppShell>} />
-      <Route path="/playlists/:id" element={<AppShell><PlaceholderPage title="Playlist Details" subtitle="Loading playlist..." /></AppShell>} />
-      <Route path="*" element={<AppShell><PlaceholderPage title="Page" subtitle="This view is loading..." /></AppShell>} />
+      {/* 1. Listener Protected Routes Zone */}
+      <Route element={<ProtectedRoute allowedRole="listener" />}>
+        <Route element={<AppShell />}>
+          <Route path="/" element={<RootIndexRedirect />}>
+            <Route index element={<HomeContent />} />
+          </Route>
+          <Route path="/discover" element={<PlaceholderPage title="Discover" subtitle="Loading discover content..." />} />
+          <Route path="/search" element={<PlaceholderPage title="Search" subtitle="Loading search results..." />} />
+          <Route path="/library" element={<PlaceholderPage title="Library" subtitle="Loading your library..." />} />
+          <Route path="/queue" element={<PlaceholderPage title="Queue" subtitle="Loading your queue..." />} />
+          <Route path="/profile" element={<PlaceholderPage title="Profile" subtitle="Loading your profile..." />} />
+          <Route path="/playlists" element={<PlaceholderPage title="Playlists" subtitle="Loading playlists..." />} />
+          
+          <Route path="/artists" element={<PlaceholderPage title="Artists List" subtitle="Browse all artists..." />} />
+          <Route path="/artists/:id" element={<PlaceholderPage title="Artist Details" subtitle="Loading artist profile..." />} />
+          
+          <Route path="/albums/:id" element={<PlaceholderPage title="Album Details" subtitle="Loading album..." />} />
+          <Route path="/playlists/:id" element={<PlaceholderPage title="Playlist Details" subtitle="Loading playlist..." />} />
+        </Route>
+      </Route>
+
+      {/* 2. Artist Dashboard Zone */}
+      {ArtistRoutes}
+
+      {/* 3. Catch-all Dynamic Guard */}
+      <Route path="*" element={<DynamicFallback />} />
     </Routes>
   );
 }

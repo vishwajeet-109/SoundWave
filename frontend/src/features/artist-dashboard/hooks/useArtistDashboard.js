@@ -1,10 +1,17 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+
+import useAuth from "@/hooks/useAuth";
+
 import {
   artistDashboardApi,
   updateArtistSong,
   deleteArtistSong,
-} from '../api/artistDashboardApi';
-import useAuth from '@/hooks/useAuth';
+  uploadArtistSong,
+} from "../api/artistDashboardApi";
 
 // ---------------------------------------------------------------------------
 // Query Hooks
@@ -14,10 +21,10 @@ export const useArtistStats = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ['artist-stats', user?._id],
-    queryFn: () => artistDashboardApi.getStats(),
+    queryKey: ["artist-stats", user?._id],
+    queryFn: artistDashboardApi.getStats,
     staleTime: 5 * 60 * 1000,
-    enabled: !!user?._id,
+    enabled: Boolean(user?._id),
   });
 };
 
@@ -25,9 +32,9 @@ export const useArtistRecentUploads = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ['artist-recent-uploads', user?._id],
-    queryFn: () => artistDashboardApi.getRecentUploads(user?._id),
-    enabled: !!user?._id,
+    queryKey: ["artist-recent-uploads", user?._id],
+    queryFn: artistDashboardApi.getRecentUploads,
+    enabled: Boolean(user?._id),
   });
 };
 
@@ -35,14 +42,14 @@ export const useArtistNotifications = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ['artist-notifications', user?._id],
-    queryFn: () => artistDashboardApi.getNotifications(),
-    enabled: !!user?._id,
+    queryKey: ["artist-notifications", user?._id],
+    queryFn: artistDashboardApi.getNotifications,
+    enabled: Boolean(user?._id),
   });
 };
 
 // ---------------------------------------------------------------------------
-// Mutation Hooks (Song CRUD & Auto Cache Invalidation)
+// Mutation Hooks
 // ---------------------------------------------------------------------------
 
 export const useUpdateArtistSong = () => {
@@ -50,10 +57,17 @@ export const useUpdateArtistSong = () => {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: ({ songId, songData }) => updateArtistSong(songId, songData),
+    mutationFn: ({ songId, songData }) =>
+      updateArtistSong(songId, songData),
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['artist-recent-uploads', user?._id] });
-      queryClient.invalidateQueries({ queryKey: ['artist-stats', user?._id] });
+      queryClient.invalidateQueries({
+        queryKey: ["artist-recent-uploads", user?._id],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["artist-stats", user?._id],
+      });
     },
   });
 };
@@ -64,12 +78,42 @@ export const useDeleteArtistSong = () => {
 
   return useMutation({
     mutationFn: (songId) => deleteArtistSong(songId),
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['artist-recent-uploads', user?._id] });
-      queryClient.invalidateQueries({ queryKey: ['artist-stats', user?._id] });
+      queryClient.invalidateQueries({
+        queryKey: ["artist-recent-uploads", user?._id],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["artist-stats", user?._id],
+      });
     },
   });
 };
+
+export const useUploadArtistSong = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: ({ formData, onProgress }) =>
+      uploadArtistSong(formData, onProgress),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["artist-recent-uploads", user?._id],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["artist-stats", user?._id],
+      });
+    },
+  });
+};
+
+// ---------------------------------------------------------------------------
+// Default Export
+// ---------------------------------------------------------------------------
 
 export default {
   useArtistStats,
@@ -77,4 +121,5 @@ export default {
   useArtistNotifications,
   useUpdateArtistSong,
   useDeleteArtistSong,
+  useUploadArtistSong,
 };
