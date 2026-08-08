@@ -1,6 +1,5 @@
- import Album from "../models/Album.js";
+import Album from "../models/Album.js";
 import Playlist from "../models/Playlist.js";
-
 import Song from "../models/Song.js";
 import ApiError from "../utils/ApiError.js";
 import { SONG_STATUS } from "../constants/songStatus.js";
@@ -8,170 +7,108 @@ import cloudinary from "../config/cloudinary.js";
 import streamifier from "streamifier";
 import generateSlug from "../utils/slugGenerator.js";
 
-
-
 const uploadToCloudinary = (buffer, folder, resourceType = "image") => {
     return new Promise((resolve, reject) => {
-
         const stream = cloudinary.uploader.upload_stream(
             {
                 folder,
                 resource_type: resourceType,
             },
             (error, result) => {
-
                 if (error) return reject(error);
-
                 resolve(result);
-
             }
         );
 
         streamifier
             .createReadStream(buffer)
             .pipe(stream);
-
     });
 };
 
-
 class SongService {
-
 
     /*
     |--------------------------------------------------------------------------
     | Create Song
     |--------------------------------------------------------------------------
     */
+    async createSong(userId, data, files) {
+        const coverImage = files?.coverImage?.[0];
+        const audioFile = files?.audioFile?.[0];
 
- async createSong(userId, data, files) {
-
-    const coverImage = files?.coverImage?.[0];
-    const audioFile = files?.audioFile?.[0];
-
-    if (!coverImage) {
-        throw new ApiError(
-            400,
-            "Cover image is required."
-        );
-    }
-
-    if (!audioFile) {
-        throw new ApiError(
-            400,
-            "Audio file is required."
-        );
-    }
-
-    const slug = generateSlug(data.title);
-
-    const exists = await Song.findOne({
-        slug,
-    });
-
-    if (exists) {
-        throw new ApiError(
-            409,
-            "Song title already exists."
-        );
-    }
-
-    let coverUpload = null;
-    let audioUpload = null;
-
-    try {
-
-        coverUpload = await uploadToCloudinary(
-            coverImage.buffer,
-            "soundwave/covers",
-            "image"
-        );
-
-        audioUpload = await uploadToCloudinary(
-            audioFile.buffer,
-            "soundwave/songs",
-            "video"
-        );
-
-        // Remove unexpected field if client sends it
-        delete data.mongoLanguage;
-
-        console.log("Song Data:", data);
-
-        const song = await Song.create({
-
-            ...data,
-
-            mongoLanguage: "none",
-
-            slug,
-
-            artist: userId,
-
-            coverImage: coverUpload.secure_url,
-
-            coverImagePublicId: coverUpload.public_id,
-
-            audioFile: audioUpload.secure_url,
-
-            audioFilePublicId: audioUpload.public_id,
-
-            status: SONG_STATUS.PENDING,
-
-            playCount: 0,
-
-            likeCount: 0,
-
-            downloadCount: 0,
-
-            shareCount: 0,
-
-        });
-
-        return song;
-
-    } catch (error) {
-
-        if (coverUpload?.public_id) {
-            await cloudinary.uploader.destroy(
-                coverUpload.public_id
-            );
+        if (!coverImage) {
+            throw new ApiError(400, "Cover image is required.");
         }
 
-        if (audioUpload?.public_id) {
-            await cloudinary.uploader.destroy(
-                audioUpload.public_id,
-                {
+        if (!audioFile) {
+            throw new ApiError(400, "Audio file is required.");
+        }
+
+        const slug = generateSlug(data.title);
+
+        const exists = await Song.findOne({ slug });
+        if (exists) {
+            throw new ApiError(409, "Song title already exists.");
+        }
+
+        let coverUpload = null;
+        let audioUpload = null;
+
+        try {
+            coverUpload = await uploadToCloudinary(
+                coverImage.buffer,
+                "soundwave/covers",
+                "image"
+            );
+
+            audioUpload = await uploadToCloudinary(
+                audioFile.buffer,
+                "soundwave/songs",
+                "video"
+            );
+
+            delete data.mongoLanguage;
+
+            const song = await Song.create({
+                ...data,
+                mongoLanguage: "none",
+                slug,
+                artist: userId,
+                coverImage: coverUpload.secure_url,
+                coverImagePublicId: coverUpload.public_id,
+                audioFile: audioUpload.secure_url,
+                audioFilePublicId: audioUpload.public_id,
+                status: SONG_STATUS.PENDING,
+                playCount: 0,
+                likeCount: 0,
+                downloadCount: 0,
+                shareCount: 0,
+            });
+
+            return song;
+        } catch (error) {
+            if (coverUpload?.public_id) {
+                await cloudinary.uploader.destroy(coverUpload.public_id).catch(() => null);
+            }
+
+            if (audioUpload?.public_id) {
+                await cloudinary.uploader.destroy(audioUpload.public_id, {
                     resource_type: "video",
-                }
-            );
+                }).catch(() => null);
+            }
+
+            throw error;
         }
-
-        throw error;
-
     }
-
-}
-
 
     /*
     |--------------------------------------------------------------------------
     | Get My Songs
     |--------------------------------------------------------------------------
     */
-
     async getMySongs(userId) {
-
-        return await Song.find({
-
-            artist: userId
-
-        }).sort({
-
-            createdAt: -1
-
-        });
-
+        return await Song.find({ artist: userId }).sort({ createdAt: -1 });
     }
 
     /*
@@ -179,264 +116,158 @@ class SongService {
     | Get Song By ID
     |--------------------------------------------------------------------------
     */
-
     async getSongById(songId) {
-
         const song = await Song.findById(songId)
             .populate("artist", "name email")
             .populate("album", "title");
 
         if (!song) {
-
-            throw new ApiError(
-
-                404,
-
-                "Song not found"
-
-            );
-
+            throw new ApiError(404, "Song not found");
         }
 
         return song;
-
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Update Song
+    | Update Song (Sanitized Update)
     |--------------------------------------------------------------------------
     */
-
     async updateSong(songId, userId, data) {
-
-        const song = await Song.findOne({
-
-            _id: songId,
-
-            artist: userId
-
-        });
-
-        if (!song) {
-
-            throw new ApiError(
-
-                404,
-
-                "Song not found"
-
-            );
-
-        }
-
-        Object.assign(
-
-            song,
-
-            data
-
-        );
-
-        await song.save();
-
-        return song;
-
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Delete Song
-    |--------------------------------------------------------------------------
-    */
-
-    async deleteSong(songId, userId) {
-
     const song = await Song.findOne({
-
         _id: songId,
-
-        artist: userId
-
+        artist: userId,
     });
 
     if (!song) {
-
-        throw new ApiError(
-
-            404,
-
-            "Song not found"
-
-        );
-
+        throw new ApiError(404, "Song not found");
     }
 
-    /*
-    |----------------------------------------
-    | Remove Song From Albums
-    |----------------------------------------
-    */
+    const allowedUpdates = [
+        "title",
+        "genre",
+        "language",
+        "category",
+        "description",
+        "album",
+    ];
 
-    await Album.updateMany(
+    // Check if title has actually changed before mutating song document
+    const titleChanged =
+        data.title !== undefined &&
+        data.title.trim() !== "" &&
+        data.title.trim() !== song.title;
 
-        {
-            songs: song._id
-        },
+    if (titleChanged) {
+        const newSlug = generateSlug(data.title);
 
-        {
-            $pull: {
-                songs: song._id
-            }
+        const existingSong = await Song.findOne({
+            slug: newSlug,
+            _id: { $ne: songId },
+        });
+
+        if (existingSong) {
+            throw new ApiError(
+                409,
+                "Song title already exists."
+            );
         }
 
-    );
-    const affectedAlbums = await Album.find({
-    songs: {
-        $ne: song._id
+        song.slug = newSlug;
     }
-});
 
-for (const album of affectedAlbums) {
-
-    const songs = await Song.find({
-        _id: {
-            $in: album.songs
+    // Safely assign allowed updates
+    for (const field of allowedUpdates) {
+        if (data[field] !== undefined) {
+            song[field] = data[field];
         }
-    }).select("duration");
+    }
 
-    album.totalSongs = album.songs.length;
+    await song.save();
 
-    album.totalDuration = songs.reduce(
-        (sum, s) => sum + (s.duration || 0),
-        0
-    );
-
-    await album.save();
-
+    return song;
 }
 
     /*
-    |----------------------------------------
-    | Remove Song From Playlists
-    |----------------------------------------
+    |--------------------------------------------------------------------------
+    | Delete Song (Fixed DB Cascading Query)
+    |--------------------------------------------------------------------------
     */
+    async deleteSong(songId, userId) {
+        const song = await Song.findOne({
+            _id: songId,
+            artist: userId
+        });
 
-    await Playlist.updateMany(
-
-        {
-            songs: song._id
-        },
-
-        {
-            $pull: {
-                songs: song._id
-            }
+        if (!song) {
+            throw new ApiError(404, "Song not found");
         }
 
-    );
-            const affectedPlaylists = await Playlist.find({
-    songs: {
-        $ne: song._id
-    }
-});
+        // 1. Fetch only affected Albums and Playlists BEFORE pull
+        const affectedAlbums = await Album.find({ songs: song._id });
+        const affectedPlaylists = await Playlist.find({ songs: song._id });
 
-for (const playlist of affectedPlaylists) {
-
-    const songs = await Song.find({
-        _id: {
-            $in: playlist.songs
-        }
-    }).select("duration");
-
-    playlist.totalSongs = playlist.songs.length;
-
-    playlist.totalDuration = songs.reduce(
-        (sum, s) => sum + (s.duration || 0),
-        0
-    );
-
-    await playlist.save();
-
-}
-
-    /*
-    |----------------------------------------
-    | Delete Cover Image
-    |----------------------------------------
-    */
-
-    if (song.coverImagePublicId) {
-
-        await cloudinary.uploader.destroy(
-
-            song.coverImagePublicId
-
+        // 2. Pull song reference
+        await Album.updateMany(
+            { songs: song._id },
+            { $pull: { songs: song._id } }
         );
 
-    }
+        await Playlist.updateMany(
+            { songs: song._id },
+            { $pull: { songs: song._id } }
+        );
 
-    /*
-    |----------------------------------------
-    | Delete Audio File
-    |----------------------------------------
-    */
+        // 3. Recalculate stats only for affected Albums
+        for (const album of affectedAlbums) {
+            const remainingSongIds = album.songs.filter(id => id.toString() !== song._id.toString());
+            const songs = await Song.find({ _id: { $in: remainingSongIds } }).select("duration");
 
-    if (song.audioFilePublicId) {
+            album.songs = remainingSongIds;
+            album.totalSongs = remainingSongIds.length;
+            album.totalDuration = songs.reduce((sum, s) => sum + (s.duration || 0), 0);
 
-        await cloudinary.uploader.destroy(
+            await album.save();
+        }
 
-            song.audioFilePublicId,
+        // 4. Recalculate stats only for affected Playlists
+        for (const playlist of affectedPlaylists) {
+            const remainingSongIds = playlist.songs.filter(id => id.toString() !== song._id.toString());
+            const songs = await Song.find({ _id: { $in: remainingSongIds } }).select("duration");
 
-            {
+            playlist.songs = remainingSongIds;
+            playlist.totalSongs = remainingSongIds.length;
+            playlist.totalDuration = songs.reduce((sum, s) => sum + (s.duration || 0), 0);
 
+            await playlist.save();
+        }
+
+        // 5. Cleanup Cloudinary media
+        if (song.coverImagePublicId) {
+            await cloudinary.uploader.destroy(song.coverImagePublicId).catch(() => null);
+        }
+
+        if (song.audioFilePublicId) {
+            await cloudinary.uploader.destroy(song.audioFilePublicId, {
                 resource_type: "video"
+            }).catch(() => null);
+        }
 
-            }
+        // 6. Delete Song Document
+        await song.deleteOne();
 
-        );
-
+        return true;
     }
 
-    /*
-    |----------------------------------------
-    | Delete Song
-    |----------------------------------------
-    */
-
-    await song.deleteOne();
-
-    return true;
-
-}
     /*
     |--------------------------------------------------------------------------
     | Pending Songs
     |--------------------------------------------------------------------------
     */
-
     async getPendingSongs() {
-
-        return await Song.find({
-
-            status: SONG_STATUS.PENDING
-
-        })
-
-        .populate(
-
-            "artist",
-
-            "name email"
-
-        )
-
-        .sort({
-
-            createdAt: -1
-
-        });
-
+        return await Song.find({ status: SONG_STATUS.PENDING })
+            .populate("artist", "name email")
+            .sort({ createdAt: -1 });
     }
 
     /*
@@ -444,33 +275,19 @@ for (const playlist of affectedPlaylists) {
     | Approve Song
     |--------------------------------------------------------------------------
     */
-
     async approveSong(songId, adminId) {
-
         const song = await Song.findById(songId);
 
         if (!song) {
-
-            throw new ApiError(
-
-                404,
-
-                "Song not found"
-
-            );
-
+            throw new ApiError(404, "Song not found");
         }
 
         song.status = SONG_STATUS.APPROVED;
-
         song.approvedBy = adminId;
-
         song.approvedAt = new Date();
 
         await song.save();
-
         return song;
-
     }
 
     /*
@@ -478,31 +295,18 @@ for (const playlist of affectedPlaylists) {
     | Reject Song
     |--------------------------------------------------------------------------
     */
-
     async rejectSong(songId, reason = "") {
-
         const song = await Song.findById(songId);
 
         if (!song) {
-
-            throw new ApiError(
-
-                404,
-
-                "Song not found"
-
-            );
-
+            throw new ApiError(404, "Song not found");
         }
 
         song.status = SONG_STATUS.REJECTED;
-
         song.rejectedReason = reason;
 
         await song.save();
-
         return song;
-
     }
 
     /*
@@ -510,113 +314,57 @@ for (const playlist of affectedPlaylists) {
     | Block Song
     |--------------------------------------------------------------------------
     */
-
     async blockSong(songId) {
-
         const song = await Song.findById(songId);
 
         if (!song) {
-
-            throw new ApiError(
-
-                404,
-
-                "Song not found"
-
-            );
-
+            throw new ApiError(404, "Song not found");
         }
 
         song.status = SONG_STATUS.BLOCKED;
-
         await song.save();
-
         return song;
-
     }
 
     /*
-|--------------------------------------------------------------------------
-| Get All Approved Songs
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | Get All Approved Songs
+    |--------------------------------------------------------------------------
+    */
+    async getAllSongs(query) {
+        const page = Number(query.page) || 1;
+        const limit = Number(query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-async getAllSongs(query) {
-
-    const page = Number(query.page) || 1;
-
-    const limit = Number(query.limit) || 10;
-
-    const skip = (page - 1) * limit;
-
-    const filter = {
-
-        status: SONG_STATUS.APPROVED
-
-    };
-
-    if (query.genre) {
-
-        filter.genre = query.genre;
-
-    }
-
-    if (query.language) {
-
-        filter.language = query.language;
-
-    }
-
-    if (query.category) {
-
-        filter.category = query.category;
-
-    }
-
-    if (query.search) {
-
-        filter.$text = {
-
-            $search: query.search
-
+        const filter = {
+            status: SONG_STATUS.APPROVED
         };
 
+        if (query.genre) filter.genre = query.genre;
+        if (query.language) filter.language = query.language;
+        if (query.category) filter.category = query.category;
+
+        if (query.search) {
+            filter.$text = { $search: query.search };
+        }
+
+        const songs = await Song.find(filter)
+            .populate("artist", "name")
+            .populate("album", "title")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Song.countDocuments(filter);
+
+        return {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+            songs
+        };
     }
-
-    const songs = await Song.find(filter)
-
-        .populate("artist", "name")
-
-        .populate("album", "title")
-
-        .sort({
-
-            createdAt: -1
-
-        })
-
-        .skip(skip)
-
-        .limit(limit);
-
-    const total = await Song.countDocuments(filter);
-
-    return {
-
-        page,
-
-        limit,
-
-        total,
-
-        totalPages: Math.ceil(total / limit),
-
-        songs
-
-    };
-
-}
-
 }
 
 export default new SongService();

@@ -1,21 +1,40 @@
-import axiosInstance from '@/lib/api/axios';
-import { API_ENDPOINTS } from '@/constants/apiEndpoints';
+import axiosInstance from "@/lib/api/axios";
+import { API_ENDPOINTS } from "@/constants/apiEndpoints";
 
 export const artistDashboardApi = {
+  // Artist Dashboard Stats
   getStats: async () => {
-    // Use the artist-specific dashboard endpoint. The admin `stats` endpoint
-    // requires admin/super_admin roles and caused artists to receive a 403,
-    // which produced the ErrorState in the Artist Dashboard. Use the
-    // artist-only route to fetch artist dashboard data.
-    const response = await axiosInstance.get('/dashboard/artist');
+    const response = await axiosInstance.get("/dashboard/artist");
     return response.data;
   },
-  getRecentUploads: async (artistId) => {
-    const response = await axiosInstance.get(`/songs?artist=${artistId}&limit=5&sort=-createdAt`);
+
+  // Recent Uploads
+  getRecentUploads: async () => {
+    const response = await axiosInstance.get("/songs/my-songs");
     return response.data;
   },
+
+  // Notifications
   getNotifications: async () => {
     const response = await axiosInstance.get(API_ENDPOINTS.NOTIFICATIONS.ALL);
     return response.data;
-  }
+  },
+
+  // Update Artist Song
+  updateSong: async (songId, updateData) => {
+    const response = await axiosInstance.put(`/songs/${songId}`, updateData);
+    return response.data;
+  },
+
+  // Delete Artist Song
+  deleteSong: async (songId) => {
+    const response = await axiosInstance.delete(`/songs/${songId}`);
+    return response.data;
+  },
 };
+
+// Named exports for backward compatibility
+export const {
+  updateSong: updateArtistSong,
+  deleteSong: deleteArtistSong,
+} = artistDashboardApi;
