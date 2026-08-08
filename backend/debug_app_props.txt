@@ -1,0 +1,9 @@
+APP_TYPE=EventEmitter
+USE=function
+HAS__ROUTER=false
+HAS_ROUTER=true
+HAS_STACK=false
+_router_TYPE=undefined
+router_TYPE=function
+stack_TYPE=undefined
+PROPS=length,name,prototype,constructor,_events,_eventsCount,_maxListeners,setMaxListeners,getMaxListeners,emit,addListener,on,prependListener,once,prependOnceListener,removeListener,off,removeAllListeners,listeners,rawListeners,listenerCount,eventNames,init,defaultConfiguration,handle,use,route,engine,param,set,path,enabled,disabled,enable,disable,acl,bind,checkout,connect,copy,delete,get,head,link,lock,m-search,merge,mkactivity,mkcalendar,mkcol,move,notify,options,patch,post,propfind,proppatch,purge,put,rebind,report,search,source,subscribe,trace,unbind,unlink,unlock,unsubscribe,all,render,listen,request,response,cache,engines,settings,locals,mountpath,router

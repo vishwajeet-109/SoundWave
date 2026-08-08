@@ -6,17 +6,17 @@
 // Final path example: /api/v1/admin/songs/pending
 
 import { Router } from "express";
-import authMiddleware from "../../middleware/authMiddleware.js";
-import roleMiddleware from "../../middleware/roleMiddleware.js";
-import validateRequest from "../../middleware/validateRequest.js";
-import { ROLES } from "../../constants/roles.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+import roleMiddleware from "../middleware/roleMiddleware.js";
+import validateRequest from "../middleware/validateRequest.js";
+import { ROLES } from "../constants/roles.js";
 import {
   listSongsByStatusValidator,
   approveSongValidator,
   rejectSongValidator,
   blockSongValidator,
   unblockSongValidator,
-} from "../../validators/songApprovalValidator.js";
+} from "../validators/songApprovalValidator.js";
 import {
   getPendingSongs,
   getApprovedSongs,
@@ -27,7 +27,7 @@ import {
   blockSong,
   unblockSong,
   getApprovalStats,
-} from "../../controllers/adminSongController.js";
+} from "../controllers/adminSongController.js";
 
 const router = Router();
 

@@ -4,6 +4,7 @@ import authMiddleware from "../middleware/authMiddleware.js";
 import roleMiddleware from "../middleware/roleMiddleware.js";
 
 import dashboardController from "../controllers/dashboardController.js";
+import approvalController from "../controllers/approvalController.js";
 
 import { ROLES } from "../constants/roles.js";
 
@@ -48,6 +49,24 @@ router.get(
     ),
 
     dashboardController.adminDashboard
+
+);
+
+router.get(
+
+    "/stats",
+
+    authMiddleware,
+
+    roleMiddleware(
+
+        ROLES.ADMIN,
+
+        ROLES.SUPER_ADMIN
+
+    ),
+
+    approvalController.getDashboardStats
 
 );
 

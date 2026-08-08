@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -8,6 +9,17 @@ import {
 } from "react";
 
 const PlayerContext = createContext(null);
+
+export function resetPlayerForLogout() {
+  const resetPlayer = globalThis.__soundwavePlayerReset;
+
+  if (typeof resetPlayer === "function") {
+    resetPlayer();
+    return true;
+  }
+
+  return false;
+}
 
 export function PlayerProvider({ children }) {
   const audioRef = useRef(new Audio());
@@ -31,6 +43,45 @@ export function PlayerProvider({ children }) {
   const [shuffle, setShuffle] = useState(false);
 
   const [repeat, setRepeat] = useState(false);
+
+  const stopSong = useCallback(() => {
+    const audio = audioRef.current;
+
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = "";
+      audio.load();
+    } catch (error) {
+      console.warn("Player stop warning:", error);
+    }
+
+    setCurrentSong(null);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, []);
+
+  const resetPlayerState = useCallback(() => {
+    stopSong();
+    setQueue([]);
+    setCurrentIndex(-1);
+  }, [stopSong]);
+
+  useEffect(() => {
+    globalThis.__soundwavePlayerReset = resetPlayerState;
+    globalThis.__soundwaveAudioRef = audioRef.current;
+
+    return () => {
+      if (globalThis.__soundwaveAudioRef === audioRef.current) {
+        delete globalThis.__soundwaveAudioRef;
+      }
+
+      if (globalThis.__soundwavePlayerReset === resetPlayerState) {
+        delete globalThis.__soundwavePlayerReset;
+      }
+    };
+  }, [resetPlayerState]);
 
   useEffect(() => {
     audioRef.current.volume = volume;
@@ -264,20 +315,21 @@ useEffect(() => {
       setRepeat,
 
       playSong,
-togglePlayPause,
+      togglePlayPause,
+      stopSong,
+      resetPlayerState,
 
-playNext,
-playPrevious,
+      playNext,
+      playPrevious,
 
-seek,
+      seek,
 
-changeVolume,
+      changeVolume,
 
-toggleMute,
+      toggleMute,
 
-toggleShuffle,
-
-toggleRepeat,
+      toggleShuffle,
+      toggleRepeat,
     }),
     [
       queue,

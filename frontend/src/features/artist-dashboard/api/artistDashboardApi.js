@@ -7,8 +7,7 @@ export const artistDashboardApi = {
     return response.data;
   },
   getRecentUploads: async (artistId) => {
-    // Reusing the existing songs endpoint with a query parameter
-    const response = await axiosInstance.get(`/api/v1/songs?artist=${artistId}&limit=5&sort=-createdAt`);
+    const response = await axiosInstance.get(`/songs?artist=${artistId}&limit=5&sort=-createdAt`);
     return response.data;
   },
   getNotifications: async () => {

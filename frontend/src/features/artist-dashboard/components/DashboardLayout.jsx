@@ -1,4 +1,5 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import ArtistSidebar from './ArtistSidebar';
 import ArtistHeader from './ArtistHeader';
 
@@ -9,7 +10,7 @@ const DashboardLayout = ({ children }) => {
       <div className="md:ml-64 flex flex-col min-h-screen">
         <ArtistHeader />
         <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
-          {children}
+          {children ?? <Outlet />}
         </main>
       </div>
     </div>

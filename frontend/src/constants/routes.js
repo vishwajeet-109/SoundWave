@@ -1,5 +1,5 @@
 export const ROUTES = {
-  HOME: '/home',
+  HOME: '/',
   SEARCH: '/search',
   LIBRARY: '/library',
   LIKED_SONGS: '/library/liked',
@@ -17,7 +17,7 @@ export const ROUTES = {
   // Artist Routes
   ARTIST_DASHBOARD: '/artist/dashboard',
   ARTIST_ANALYTICS: '/artist/analytics',
-  ARTIST_UPLOAD_SONG: '/artist/upload-song',
+  ARTIST_UPLOAD_SONG: '/artist/upload',
   ARTIST_UPLOAD_ALBUM: '/artist/upload-album',
   ARTIST_SONGS: '/artist/songs',
   ARTIST_ALBUMS: '/artist/albums',
@@ -28,8 +28,8 @@ export const ROUTES = {
   ARTIST_SETTINGS: '/artist/settings',
 
   // Admin Routes
-  ADMIN_DASHBOARD: '/admin/dashboard',
-  ADMIN_APPROVALS: '/admin/approvals',
+  ADMIN_DASHBOARD: '/admin',
+  ADMIN_APPROVALS: '/admin/approval',
   ADMIN_USERS: '/admin/users',
   ADMIN_ARTISTS: '/admin/artists',
   ADMIN_SONGS: '/admin/songs',
@@ -39,6 +39,7 @@ export const ROUTES = {
   ADMIN_REPORTS: '/admin/reports',
   ADMIN_ANALYTICS: '/admin/analytics',
   ADMIN_SETTINGS: '/admin/settings',
+  ADMIN_CREATE_ARTIST: '/admin/create-artist',
 
   // Auth Portals
   LOGIN: '/login',

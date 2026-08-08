@@ -1,16 +1,17 @@
-import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { USER_NAV, ARTIST_NAV, ADMIN_NAV } from './sidebar.config';
-import SidebarItem from "./SidebarItem";
-import SidebarLogo from "./SidebarLogo";
+import SidebarItem from './SidebarItem';
+import SidebarLogo from './SidebarLogo';
+
+const normalizeRole = (value) => String(value ?? '').trim().toUpperCase();
 
 const Sidebar = () => {
   const { user } = useAuth();
-  const role = user?.role || 'user';
+  const role = normalizeRole(user?.role);
 
   const getNavItems = () => {
-    if (role === 'admin' || role === 'super_admin') return ADMIN_NAV;
-    if (role === 'artist') return ARTIST_NAV;
+    if (role === 'ADMIN' || role === 'SUPER_ADMIN') return ADMIN_NAV;
+    if (role === 'ARTIST') return ARTIST_NAV;
     return USER_NAV;
   };
 
@@ -21,11 +22,16 @@ const Sidebar = () => {
       <SidebarLogo />
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {navItems.map((item) => (
-          <SidebarItem key={item.path} item={item} />
+          <SidebarItem
+            key={item.path}
+            title={item.label}
+            path={item.path}
+            icon={item.icon}
+          />
         ))}
       </nav>
     </aside>
   );
 };
 
-  export default Sidebar;
+export default Sidebar;

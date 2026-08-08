@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, Music, Image as ImageIcon, X, CheckCircle2 } from 'lucide-react';
-import DashboardLayout from '../components/DashboardLayout';
 import useUploadSong from '../hooks/useUploadSong';
 
 const UploadSong = () => {
@@ -71,7 +70,6 @@ const UploadSong = () => {
   };
 
   return (
-    <DashboardLayout>
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-zinc-50 tracking-tight mb-2">Upload New Release</h1>
@@ -228,7 +226,6 @@ const UploadSong = () => {
           </form>
         )}
       </div>
-    </DashboardLayout>
   );
 };
 

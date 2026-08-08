@@ -1,6 +1,5 @@
 import React from 'react';
 import { Headphones, DiscAlbum, Users, PlayCircle, Clock } from 'lucide-react';
-import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/StatCard';
 import QuickActions from '../components/QuickActions';
 import RevenueCard from '../components/RevenueCard';
@@ -24,7 +23,6 @@ const ArtistDashboard = () => {
   if (statsError) return <ErrorState message="Failed to load dashboard statistics." />;
 
   return (
-    <DashboardLayout>
       <div className="flex flex-col gap-6 max-w-7xl mx-auto">
         
         {/* Header & Quick Actions */}
@@ -119,7 +117,6 @@ const ArtistDashboard = () => {
 
         </div>
       </div>
-    </DashboardLayout>
   );
 };
 

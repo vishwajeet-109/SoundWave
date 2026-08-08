@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-// 🚨 FIX: Added ShieldCheck import!
 import { Check, X, PlayCircle, Music, Clock, ShieldCheck } from 'lucide-react';
-// 🚨 FIX: AdminLayout import removed!
 import approvalHooks from '../hooks/useApprovals';
 import Card from '@/shared/ui/card';
 import Button from '@/shared/ui/button';
 import Skeleton from '@/shared/ui/skeleton';
+import Textarea from '@/shared/ui/textarea';
 import EmptyState from '@/shared/ui/states/EmptyState';
 import ErrorState from '@/shared/ui/states/ErrorState';
 
@@ -16,8 +15,25 @@ const SongApproval = () => {
   const { mutate: reject, isPending: isRejecting } = useRejectSong();
   
   const [activeAudio, setActiveAudio] = useState(null);
+  const [rejectionOpen, setRejectionOpen] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
-  const pendingSongs = response?.data || [];
+  const normalizePendingSongs = (payload) => {
+    if (Array.isArray(payload)) return payload;
+    const candidates = [
+      payload?.data,
+      payload?.data?.data,
+      payload?.data?.items,
+      payload?.data?.songs,
+      payload?.data?.pendingSongs,
+      payload?.items,
+      payload?.songs,
+      payload?.pendingSongs,
+    ];
+    return candidates.find(Array.isArray) || [];
+  };
+
+  const pendingSongs = normalizePendingSongs(response);
   const isMutating = isApproving || isRejecting;
 
   const handleApprove = (id) => {
@@ -27,10 +43,15 @@ const SongApproval = () => {
   };
 
   const handleReject = (id) => {
-    const reason = window.prompt('Provide a reason for rejection:');
-    if (reason !== null) {
-      reject({ songId: id, reason: reason || 'Violation of platform terms.' });
-    }
+    setRejectionOpen(id === rejectionOpen ? null : id);
+    setRejectionReason("");
+  };
+
+  const submitRejection = (id) => {
+    const reason = rejectionReason.trim() || 'Violation of platform terms.';
+    reject({ songId: id, reason });
+    setRejectionOpen(null);
+    setRejectionReason("");
   };
 
   const toggleAudio = (audioUrl) => {
@@ -93,29 +114,70 @@ const SongApproval = () => {
                 </div>
               </div>
 
-              {/* Hidden Audio Player for Preview */}
+              {/* Audio Player for Preview */}
               {activeAudio === song.audioUrl && (
-                <audio autoPlay src={song.audioUrl} onEnded={() => setActiveAudio(null)} className="hidden" />
+                <div className="w-full mt-4">
+                  <audio controls autoPlay src={song.audioUrl} onEnded={() => setActiveAudio(null)} className="w-full rounded-lg bg-[#0D0D0D]" />
+                </div>
               )}
 
               {/* Actions */}
-              <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-                <Button 
-                  onClick={() => handleReject(song._id)}
-                  disabled={isMutating}
-                  variant="outline"
-                  className="border-[#EF4444]/50 text-[#EF4444] hover:bg-[#EF4444]/10 hover:border-[#EF4444]"
-                >
-                  <X className="w-4 h-4 mr-2" /> Reject
-                </Button>
-                
-                <Button 
-                  onClick={() => handleApprove(song._id)}
-                  disabled={isMutating}
-                  className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#080808] font-bold"
-                >
-                  <Check className="w-4 h-4 mr-2" /> Approve
-                </Button>
+              <div className="flex flex-col gap-3 w-full md:w-auto justify-end">
+                <div className="flex flex-wrap items-center gap-3 justify-end">
+                  <Button
+                    onClick={() => toggleAudio(song.audioUrl)}
+                    disabled={isMutating}
+                    variant="outline"
+                    className="border-[#3B82F6]/50 text-[#3B82F6] hover:bg-[#3B82F6]/10 hover:border-[#3B82F6]"
+                  >
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    {activeAudio === song.audioUrl ? 'Stop' : 'Listen'}
+                  </Button>
+
+                  <Button 
+                    onClick={() => handleReject(song._id)}
+                    disabled={isMutating}
+                    variant="outline"
+                    className="border-[#EF4444]/50 text-[#EF4444] hover:bg-[#EF4444]/10 hover:border-[#EF4444]"
+                  >
+                    <X className="w-4 h-4 mr-2" /> Reject
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => handleApprove(song._id)}
+                    disabled={isMutating}
+                    className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#080808] font-bold"
+                  >
+                    <Check className="w-4 h-4 mr-2" /> Approve
+                  </Button>
+                </div>
+
+                {rejectionOpen === song._id && (
+                  <div className="mt-3 flex flex-col gap-3 rounded-xl border border-[#373737] bg-[#111111] p-4">
+                    <Textarea
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      placeholder="Enter rejection reason..."
+                      className="min-h-[100px] bg-[#0D0D0D] text-[#F8FAFC]"
+                    />
+                    <div className="flex flex-wrap gap-3 justify-end">
+                      <Button
+                        onClick={() => setRejectionOpen(null)}
+                        variant="outline"
+                        className="border-[#6B7280]/50 text-[#9CA3AF] hover:bg-[#374151]/10 hover:border-[#9CA3AF]"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => submitRejection(song._id)}
+                        disabled={isMutating}
+                        className="bg-[#EF4444] hover:bg-[#DC2626]/90 text-[#FFFFFF]"
+                      >
+                        Submit Rejection
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
             </Card>

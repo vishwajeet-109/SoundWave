@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import authService from "@/services/authService";
+import { resetPlayerForLogout } from "@/context/PlayerContext";
 
 const useAuthStore = create((set, get) => ({
   user: null,
@@ -44,6 +45,7 @@ const useAuthStore = create((set, get) => ({
       });
     } catch (error) {
       if (error?.response?.status === 401) {
+        resetPlayerForLogout();
         localStorage.removeItem("accessToken");
         set({
           user: null,
@@ -182,14 +184,25 @@ login: async (credentials, password, portalRole) => {
   }
 },
 
-  logout: () => {
-    authService.logout();
+  logout: async () => {
+    resetPlayerForLogout();
+
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.warn("Logout request failed, clearing local auth state anyway.", error);
+    }
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
 
     set({
       user: null,
       token: null,
       isAuthenticated: false,
       initialized: true,
+      isLoading: false,
+      error: null,
     });
   },
 }));

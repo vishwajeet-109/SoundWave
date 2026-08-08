@@ -2,12 +2,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // Layout
 import AppShell from "@/layouts/AppShell";
+import AdminLayout from "@/features/admin/components/AdminLayout";
+import DashboardLayout from "@/features/artist-dashboard/components/DashboardLayout";
 
 // Route Guards
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicRoute from "@/components/auth/PublicRoute";
 import RoleRoute from "@/components/auth/RoleRoute";
-import AdminRoute from "@/routes/AdminRoutes";
 
 // Auth
 import Login from "@/features/auth/pages/Login";
@@ -36,7 +37,7 @@ import QueuePage from "@/features/home/pages/QueuePage";
 
 // Profile
 import ProfilePage from "@/features/home/pages/ProfilePage";
-import CreateArtistPage from "@/features/admin/pages/CreateArtistPage"; 
+import CreateArtistPage from "@/features/admin/pages/CreateArtistPage";
 import { ArtistDashboard, UploadSong } from "@/features/artist-dashboard";
 
 // Admin Imports
@@ -45,19 +46,12 @@ import { SongApproval, AdminDashboard } from "@/features/admin";
 export default function AppRouter() {
   return (
     <Routes>
-      {/* ===========================
-            PUBLIC ROUTES
-      ============================ */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Route>
 
-      {/* ===========================
-            PROTECTED ROUTES
-      ============================ */}
       <Route element={<ProtectedRoute />}>
-        {/* Main User Routes */}
         <Route element={<AppShell />}>
           <Route index element={<Home />} />
           <Route path="/search" element={<Search />} />
@@ -69,50 +63,22 @@ export default function AppRouter() {
           <Route path="/playlists/:id" element={<PlaylistDetails />} />
         </Route>
 
-        {/* ======================
-                    Artist
-        ================------- */}
-        <Route
-          element={
-            <RoleRoute allowedRoles={["artist", "admin", "super_admin"]} />
-          }
-        >
-          <Route path="/artist/dashboard" element={<ArtistDashboard />} />
-          <Route path="/artist/upload" element={<UploadSong />} />
-        </Route>
-{/* ======================
-                    Admin
-        ======================= */}
-        <Route
-          element={
-            <RoleRoute allowedRoles={["admin", "super_admin", "moderator"]} />
-          }
-        >
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/approval" element={<SongApproval />} />
-          
-          
+        <Route element={<RoleRoute allowedRoles={["ARTIST"]} />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/artist/dashboard" element={<ArtistDashboard />} />
+            <Route path="/artist/upload" element={<UploadSong />} />
+          </Route>
         </Route>
 
-        {/* =========================== 
-            Artist Creation Route (Secured with AdminRoute)
-        ============================ */}
-        <Route
-          path="/admin/create-artist"
-          element={
-            <AdminRoute>
-              <CreateArtistPage />
-            </AdminRoute>
-          }
-        />
-
-        
-      
+        <Route element={<RoleRoute allowedRoles={["ADMIN", "SUPER_ADMIN"]} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="approval" element={<SongApproval />} />
+            <Route path="create-artist" element={<CreateArtistPage />} />
+          </Route>
+        </Route>
       </Route>
 
-      {/* ===========================
-            FALLBACK
-      ============================ */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

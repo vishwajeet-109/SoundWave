@@ -8,6 +8,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import songRoutes from "./routes/songRoutes.js";
 import approvalRoutes from "./routes/approvalRoutes.js";
+import songApprovalRoutes from "./routes/songApprovalRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import albumRoutes from "./routes/albumRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
@@ -49,30 +50,31 @@ app.use(compressionMiddleware);
 app.use(performanceMiddleware({ thresholdMs: performanceConfig.slowRequestThresholdMs }));
 app.use(morgan("dev"));
 
-app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/admin", approvalRoutes);
-app.use("/api/admin/analytics", analyticsRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/songs", songRoutes);
-app.use("/api/albums", albumRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/genres", genreRoutes);
-app.use("/api/playlists", playlistRoutes);
-app.use("/api/search", searchRoutes);
-app.use("/api/reports", reportRoutes);
-app.use("/api/stream", streamRoutes);
-app.use("/api/recommendations", recommendationRoutes);
-app.use("/api/me/history", historyRoutes);
-app.use("/api/me/queue", queueRoutes);
-app.use("/api/me/notifications", notificationRoutes);
-app.use("/api/stream", playbackRoutes.progressRouter);
-app.use("/api/me/continue-listening", playbackRoutes.continueListeningRouter);
-app.use("/api/artists", artistRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/admin", approvalRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/songs", songRoutes);
+app.use("/api/v1/albums", albumRoutes);
+app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/genres", genreRoutes);
+app.use("/api/v1/playlists", playlistRoutes);
+app.use("/api/v1/search", searchRoutes);
+app.use("/api/v1/reports", reportRoutes);
+app.use("/api/v1/stream", streamRoutes);
+app.use("/api/v1/recommendations", recommendationRoutes);
+app.use("/api/v1/me/history", historyRoutes);
+app.use("/api/v1/me/queue", queueRoutes);
+app.use("/api/v1/me/notifications", notificationRoutes);
+app.use("/api/v1/stream", playbackRoutes.progressRouter);
+app.use("/api/v1/me/continue-listening", playbackRoutes.continueListeningRouter);
+app.use("/api/v1/artists", artistRoutes);
+app.use("/api/v1/approvals", songApprovalRoutes);
 
-app.use("/api/songs/:songId/like", likeRoutes);
+app.use("/api/v1/songs/:songId/like", likeRoutes);
 
-app.use("/api/me/likes", myLikesRoutes);
-app.use("/api/me/following", myFollowingRouter);
+app.use("/api/v1/me/likes", myLikesRoutes);
+app.use("/api/v1/me/following", myFollowingRouter);
 
 /*
 |--------------------------------------------------------------------------
