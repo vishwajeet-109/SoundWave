@@ -29,7 +29,7 @@ const RoleRoute = ({ allowedRoles = [] }) => {
     }
 
     if (normalizedUserRole === 'ARTIST') {
-      return <Navigate to={ROUTES.ARTIST_DASHBOARD} replace />;
+      return <Navigate to={ROUTES.ARTIST} replace />;
     }
 
     return <Navigate to={ROUTES.HOME} replace />;

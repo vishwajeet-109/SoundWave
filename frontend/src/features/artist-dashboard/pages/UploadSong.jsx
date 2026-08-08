@@ -41,7 +41,7 @@ const UploadSong = () => {
     if (type === 'cover' && coverInputRef.current) coverInputRef.current.value = '';
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
@@ -53,11 +53,12 @@ const UploadSong = () => {
     const payload = new FormData();
     payload.append('title', formData.title);
     if (formData.genre) payload.append('genre', formData.genre);
-    payload.append('audio', files.audio); 
-    payload.append('cover', files.cover); 
+    
+    // ⚠️ Yahan keys change karni hain taaki backend se match ho sake
+    payload.append('audioFile', files.audio); // pehle 'audio' tha
+    payload.append('coverImage', files.cover); // pehle 'cover' tha
 
     try {
-      // Pass payload directly to uploadSong matching useUploadSong mutationFn
       await uploadSong(payload);
       setSuccess(true);
       setTimeout(() => {

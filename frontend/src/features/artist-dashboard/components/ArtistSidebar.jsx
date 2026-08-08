@@ -10,22 +10,19 @@ import {
   Users,
   DollarSign,
   Bell,
-  Settings,
   LogOut,
 } from 'lucide-react';
 import useAuthStore from '@/store/authStore';
 
 const navItems = [
   { name: 'Dashboard', path: '/artist', icon: LayoutDashboard, end: true },
-  { name: 'Upload Track', path: '/artist/upload', icon: UploadCloud },
   { name: 'Upload Album', path: '/artist/upload-album', icon: FolderPlus },
-  { name: 'My Songs', path: '/artist/my-songs', icon: Music2 },
-  { name: 'My Albums', path: '/artist/my-albums', icon: Disc },
+  { name: 'My Songs', path: '/artist/songs', icon: Music2 },
+  { name: 'My Albums', path: '/artist/albums', icon: Disc },
   { name: 'Analytics', path: '/artist/analytics', icon: BarChart3 },
-  { name: 'Audience', path: '/artist/audience', icon: Users },
-  { name: 'Earnings', path: '/artist/earnings', icon: DollarSign },
+  { name: 'Followers', path: '/artist/followers', icon: Users },
+  { name: 'Revenue', path: '/artist/revenue', icon: DollarSign },
   { name: 'Notifications', path: '/artist/notifications', icon: Bell },
-  { name: 'Settings', path: '/artist/profile', icon: Settings }, // Merged Profile & Settings into one
 ];
 
 const ArtistSidebar = () => {

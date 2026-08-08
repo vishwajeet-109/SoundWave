@@ -24,16 +24,14 @@ export default function NewReleases({
           ))}
         </div>
       ) : albums.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-
+        <div className="grid gap-6 auto-rows-fr sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
           {albums.map((album) => (
-  <AlbumCard
-    key={album._id}
-    album={album}
-    onPlay={onPlay}
-  />
-))}
-
+            <AlbumCard
+              key={album._id}
+              album={album}
+              onPlay={onPlay}
+            />
+          ))}
         </div>
       ) : (
         <div className="flex h-40 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900">

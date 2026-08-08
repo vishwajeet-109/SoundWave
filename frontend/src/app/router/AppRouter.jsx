@@ -38,10 +38,27 @@ import QueuePage from "@/features/home/pages/QueuePage";
 // Profile
 import ProfilePage from "@/features/home/pages/ProfilePage";
 import CreateArtistPage from "@/features/admin/pages/CreateArtistPage";
-import { ArtistDashboard, UploadSong } from "@/features/artist-dashboard";
+import UploadSong from "@/features/artist-dashboard/pages/UploadSong";
+import DashboardHome from "@/features/artist-dashboard/pages/DashboardHome";
+import Analytics from "@/features/artist-dashboard/pages/Analytics";
+import Audience from "@/features/artist-dashboard/pages/Audience";
+import Earnings from "@/features/artist-dashboard/pages/Earnings";
+import Notifications from "@/features/artist-dashboard/pages/Notifications";
+import ProfileSettings from "@/features/artist-dashboard/pages/ProfileSettings";
+import AccountSettings from "@/features/artist-dashboard/pages/AccountSettings";
+import MySongs from "@/features/artist-dashboard/pages/MySongs";
 
 // Admin Imports
 import { SongApproval, AdminDashboard } from "@/features/admin";
+
+function PlaceholderPage({ title, subtitle }) {
+  return (
+    <div className="p-8 text-zinc-100">
+      <h1 className="text-2xl font-bold mb-2">{title}</h1>
+      {subtitle && <p className="text-zinc-400">{subtitle}</p>}
+    </div>
+  );
+}
 
 export default function AppRouter() {
   return (
@@ -64,9 +81,23 @@ export default function AppRouter() {
         </Route>
 
         <Route element={<RoleRoute allowedRoles={["ARTIST"]} />}>
-          <Route element={<DashboardLayout />}>
-            <Route path="/artist/dashboard" element={<ArtistDashboard />} />
-            <Route path="/artist/upload" element={<UploadSong />} />
+          <Route path="/artist" element={<DashboardLayout />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="dashboard" element={<DashboardHome />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="upload" element={<UploadSong />} />
+            <Route path="upload-album" element={<PlaceholderPage title="Upload Album" />} />
+            <Route path="songs" element={<MySongs />} />
+            <Route path="albums" element={<PlaceholderPage title="My Albums" />} />
+            <Route path="my-songs" element={<MySongs />} />
+            <Route path="my-albums" element={<PlaceholderPage title="My Albums" />} />
+            <Route path="audience" element={<Audience />} />
+            <Route path="followers" element={<Audience />} />
+            <Route path="earnings" element={<Earnings />} />
+            <Route path="revenue" element={<Earnings />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="profile" element={<ProfileSettings />} />
+            <Route path="settings" element={<AccountSettings />} />
           </Route>
         </Route>
 

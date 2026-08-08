@@ -50,7 +50,7 @@ router.get("/:id", songController.getSongById);
 
 // Create song
 router.post(
-  "/",
+  "/upload",
   authMiddleware,
   roleMiddleware(ROLES.ARTIST),
   upload.fields([

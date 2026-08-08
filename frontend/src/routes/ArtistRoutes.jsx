@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 // Artist Studio Layout & Pages
-import DashboardLayout from "../features/artist-dashboard/DashboardLayout";
+import DashboardLayout from "../features/artist-dashboard/components/DashboardLayout";
 import DashboardHome from "../features/artist-dashboard/pages/DashboardHome";
 import UploadSong from "../features/artist-dashboard/pages/UploadSong";
 import MySongs from "../features/artist-dashboard/pages/MySongs";
@@ -12,6 +12,8 @@ import Audience from "../features/artist-dashboard/pages/Audience";
 import Earnings from "../features/artist-dashboard/pages/Earnings";
 import Notifications from "../features/artist-dashboard/pages/Notifications";
 import ProfileSettings from "../features/artist-dashboard/pages/ProfileSettings";
+import AccountSettings from "../features/artist-dashboard/pages/AccountSettings";
+import AccountSettings from "../features/artist-dashboard/pages/AccountSettings";
 
 // Temporary Placeholder Component (Jin pages ki file abhi baki hai)
 function PlaceholderPage({ title }) {
@@ -55,9 +57,11 @@ export const ArtistRoutes = (
       {/* 9. Notifications (/artist/notifications) */}
       <Route path="notifications" element={<Notifications />} />
 
-      {/* 10. Settings & Profile merged (/artist/profile) */}
+      {/* 10. Profile (/artist/profile) */}
       <Route path="profile" element={<ProfileSettings />} />
-      <Route path="settings" element={<ProfileSettings />} />
+
+      {/* 11. Account Settings (/artist/settings) */}
+      <Route path="settings" element={<AccountSettings />} />
     </Route>
   </Route>
 );

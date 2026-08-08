@@ -16,6 +16,7 @@ export const ROUTES = {
 
   // Artist Routes
   ARTIST_DASHBOARD: '/artist/dashboard',
+  ARTIST: '/artist',
   ARTIST_ANALYTICS: '/artist/analytics',
   ARTIST_UPLOAD_SONG: '/artist/upload',
   ARTIST_UPLOAD_ALBUM: '/artist/upload-album',

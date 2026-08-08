@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 
 import StatCard from "../components/StatCard";
-import QuickActions from "../components/QuickActions";
 import RevenueCard from "../components/RevenueCard";
 
 import artistDashboardHooks from "../hooks/useArtistDashboard";
@@ -173,9 +172,6 @@ const ArtistDashboard = () => {
           </p>
         </div>
       </div>
-
-      {/* Quick Actions */}
-      <QuickActions />
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

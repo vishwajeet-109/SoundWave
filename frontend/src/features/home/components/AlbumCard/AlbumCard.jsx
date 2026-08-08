@@ -19,10 +19,10 @@ function AlbumCard({ album }) {
       whileHover={{ y: -8 }}
       transition={{ duration: 0.25 }}
       onClick={handleNavigate}
-      className="cursor-pointer"
+      className="cursor-pointer h-full"
     >
-      <Card padding="none" variant="interactive" className="group overflow-hidden rounded-[28px]">
-        <div className="relative">
+      <Card padding="none" variant="interactive" className="group overflow-hidden rounded-[28px] h-full">
+        <div className="relative h-44 overflow-hidden">
           <img
             src={cover}
             alt={album.title}
@@ -31,7 +31,7 @@ function AlbumCard({ album }) {
               event.currentTarget.onerror = null;
               event.currentTarget.src = PLACEHOLDER;
             }}
-            className="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
 
           <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
@@ -46,28 +46,28 @@ function AlbumCard({ album }) {
           </motion.button>
         </div>
 
-        <div className="space-y-3 p-5">
-          <h3 className="line-clamp-1 text-lg font-bold text-white">{album.title}</h3>
+        <div className="flex flex-1 flex-col justify-between space-y-3 p-5">
+          <div>
+            <h3 className="line-clamp-1 text-lg font-bold text-white">{album.title}</h3>
 
-          <p className="line-clamp-1 text-sm text-zinc-400">{artist}</p>
+            <p className="line-clamp-1 text-sm text-zinc-400">{artist}</p>
+          </div>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-2 text-xs text-zinc-500">
             <div className="flex items-center gap-2">
               <Disc3 size={15} className="text-green-500" />
-
-              <span className="text-xs text-zinc-500">{songs.length} Songs</span>
+              <span>{songs.length} Songs</span>
             </div>
 
             {year && (
-              <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <div className="flex items-center gap-1">
                 <Calendar size={14} />
-
                 <span>{year}</span>
               </div>
             )}
           </div>
 
-          <div className="pt-1">
+          <div>
             <span className="inline-flex rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-400">
               Album
             </span>
