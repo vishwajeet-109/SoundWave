@@ -4,7 +4,7 @@ import { searchService } from "../services/searchService";
 
 import { QUERY_KEYS } from "@/constants/queryKeys";
 
-function useSearch(params) {
+export function useSearch(params) {
 
   return useQuery({
 

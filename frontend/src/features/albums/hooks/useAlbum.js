@@ -17,7 +17,7 @@ function useAlbum(albumId) {
     gcTime: 1000 * 60 * 10,
 
     retry: (failureCount, error) => {
-      // Don't retry a 404 (album genuinely doesn't exist) or a 400
+      // Don't retry a 404 (album genuinely exists) or a 400
       // (malformed id) — only retry on transient/server errors.
       const status = error?.response?.status;
       if (status === 404 || status === 400) return false;
@@ -27,3 +27,6 @@ function useAlbum(albumId) {
     refetchOnWindowFocus: false,
   });
 }
+
+export { useAlbum };
+export default useAlbum;

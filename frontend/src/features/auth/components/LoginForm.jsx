@@ -29,7 +29,13 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      const user = await login(formData.email, formData.password);
+      const user = await login(
+  {
+    email: formData.email,
+    password: formData.password,
+  },
+  selectedRole
+);
       const userRole = user?.role;
 
       // Strict Role-Based Portal Validation (Issue 4)

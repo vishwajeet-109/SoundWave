@@ -17,3 +17,6 @@ function useTrendingSearch() {
   });
 
 }
+
+export { useTrendingSearch };
+export default useTrendingSearch;

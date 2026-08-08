@@ -10,3 +10,6 @@ function useArtistResultCard({ artist, onPlay }) {
     handlePlay,
   };
 }
+
+export { useArtistResultCard };
+export default useArtistResultCard;

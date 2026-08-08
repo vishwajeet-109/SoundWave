@@ -10,3 +10,6 @@ function usePlaylistResultCard({ playlist, onPlay }) {
     handlePlay,
   };
 }
+
+export { usePlaylistResultCard };
+export default usePlaylistResultCard;

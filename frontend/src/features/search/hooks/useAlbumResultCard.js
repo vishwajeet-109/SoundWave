@@ -20,3 +20,6 @@ function useAlbumResultCard({ album, onPlay }) {
     handlePlay,
   };
 }
+
+export { useAlbumResultCard };
+export default useAlbumResultCard;

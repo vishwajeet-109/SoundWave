@@ -15,3 +15,6 @@ function useRecentSearch() {
   });
 
 }
+
+export { useRecentSearch };
+export default useRecentSearch;
