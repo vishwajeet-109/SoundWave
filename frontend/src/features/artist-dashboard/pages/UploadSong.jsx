@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, Music, Image as ImageIcon, X, CheckCircle2, AlertCircle } from 'lucide-react';
-import useUploadSong from '../hooks/useUploadSong'; // Perfect Default Import
+import useUploadSong from '../hooks/useUploadSong';
 
 const UploadSong = () => {
   const navigate = useNavigate();
@@ -13,6 +13,8 @@ const UploadSong = () => {
   const [formData, setFormData] = useState({
     title: '',
     genre: '',
+    category: '',
+    language: '',
   });
   
   const [files, setFiles] = useState({
@@ -41,22 +43,23 @@ const UploadSong = () => {
     if (type === 'cover' && coverInputRef.current) coverInputRef.current.value = '';
   };
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
-    if (!formData.title || !files.audio || !files.cover) {
-      setError('Please provide a title, an audio file, and cover art.');
+    // Check all required fields matching backend validator
+    if (!formData.title || !formData.genre || !formData.category || !formData.language || !files.audio || !files.cover) {
+      setError('Please fill all required fields (Title, Genre, Category, Language, Audio, and Cover Art).');
       return;
     }
 
     const payload = new FormData();
     payload.append('title', formData.title);
-    if (formData.genre) payload.append('genre', formData.genre);
-    
-    // ⚠️ Yahan keys change karni hain taaki backend se match ho sake
-    payload.append('audioFile', files.audio); // pehle 'audio' tha
-    payload.append('coverImage', files.cover); // pehle 'cover' tha
+    payload.append('genre', formData.genre);
+    payload.append('category', formData.category);
+    payload.append('language', formData.language);
+    payload.append('audioFile', files.audio); 
+    payload.append('coverImage', files.cover); 
 
     try {
       await uploadSong(payload);
@@ -105,13 +108,38 @@ const UploadSong = () => {
                   disabled={isPending}
                 />
               </div>
+
               <div className="space-y-2 flex flex-col">
-                <label className="text-sm font-medium text-zinc-50">Genre</label>
+                <label className="text-sm font-medium text-zinc-50">Genre *</label>
                 <input 
                   name="genre"
                   value={formData.genre}
                   onChange={handleInputChange}
                   placeholder="e.g. Synthwave"
+                  className="bg-zinc-950 border border-zinc-800 text-zinc-50 px-4 py-2 rounded-md outline-none focus:border-green-500 transition-colors"
+                  disabled={isPending}
+                />
+              </div>
+
+              <div className="space-y-2 flex flex-col">
+                <label className="text-sm font-medium text-zinc-50">Category *</label>
+                <input 
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Single / Album"
+                  className="bg-zinc-950 border border-zinc-800 text-zinc-50 px-4 py-2 rounded-md outline-none focus:border-green-500 transition-colors"
+                  disabled={isPending}
+                />
+              </div>
+
+              <div className="space-y-2 flex flex-col">
+                <label className="text-sm font-medium text-zinc-50">Language *</label>
+                <input 
+                  name="language"
+                  value={formData.language}
+                  onChange={handleInputChange}
+                  placeholder="e.g. English / Hindi"
                   className="bg-zinc-950 border border-zinc-800 text-zinc-50 px-4 py-2 rounded-md outline-none focus:border-green-500 transition-colors"
                   disabled={isPending}
                 />
