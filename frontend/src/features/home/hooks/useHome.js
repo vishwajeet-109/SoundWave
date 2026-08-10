@@ -1,39 +1,29 @@
 import { useMemo } from "react";
+
 import { useSongs } from "./useSongs";
 import { useAlbums } from "./useAlbums";
 import { useArtists } from "./useArtists";
 import { usePlaylists } from "./usePlaylists";
 import { useHistory } from "./useHistory";
+
 import useAuth from "@/hooks/useAuth";
 
-// 🛡️ Universal extractor to handle any backend response structure safely
-const extractList = (queryResult, key) => {
-  const raw = queryResult?.data ?? queryResult;
-  if (!raw) return [];
-  if (Array.isArray(raw)) return raw;
-  if (Array.isArray(raw[key])) return raw[key];
-  if (Array.isArray(raw.data)) return raw.data;
-  if (Array.isArray(raw.items)) return raw.items;
-  
-  if (raw.data && typeof raw.data === "object") {
-    if (Array.isArray(raw.data[key])) return raw.data[key];
-    if (Array.isArray(raw.data.items)) return raw.data.items;
-    if (Array.isArray(raw.data.data)) return raw.data.data;
-  }
-  
-  return [];
-};
-
-export function useHome() {
+function useHome() {
   const songsQuery = useSongs();
+
   const albumsQuery = useAlbums();
+
   const artistsQuery = useArtists();
+
   const playlistsQuery = usePlaylists();
 
-  const { isAuthenticated } = useAuth();
+  const {
+    isAuthenticated,
+  } = useAuth();
 
   const historyQuery = useHistory({
     enabled: isAuthenticated,
+    retry: false,
   });
 
   const isLoading =
@@ -43,18 +33,42 @@ export function useHome() {
     playlistsQuery.isLoading ||
     (isAuthenticated && historyQuery.isLoading);
 
+  // 🛡️ Excluded historyQuery.isError so a history 404 doesn't break the entire Home page
   const isError =
     songsQuery.isError ||
     albumsQuery.isError ||
     artistsQuery.isError ||
-    playlistsQuery.isError ||
-    (isAuthenticated && historyQuery.isError);
+    playlistsQuery.isError;
 
-  const songs = useMemo(() => extractList(songsQuery, "songs"), [songsQuery.data]);
-  const albums = useMemo(() => extractList(albumsQuery, "albums"), [albumsQuery.data]);
-  const artists = useMemo(() => extractList(artistsQuery, "artists"), [artistsQuery.data]);
-  const playlists = useMemo(() => extractList(playlistsQuery, "playlists"), [playlistsQuery.data]);
-  const history = useMemo(() => extractList(historyQuery, "history"), [historyQuery.data]);
+  const songs =
+    songsQuery.data?.songs ??
+    songsQuery.data?.items ??
+    songsQuery.data ??
+    [];
+
+  const albums =
+    albumsQuery.data?.albums ??
+    albumsQuery.data?.items ??
+    albumsQuery.data ??
+    [];
+
+  const artists =
+    artistsQuery.data?.artists ??
+    artistsQuery.data?.items ??
+    artistsQuery.data ??
+    [];
+
+  const playlists =
+    playlistsQuery.data?.playlists ??
+    playlistsQuery.data?.items ??
+    playlistsQuery.data ??
+    [];
+
+  const history =
+    historyQuery.data?.history ??
+    historyQuery.data?.items ??
+    historyQuery.data ??
+    [];
 
   const data = useMemo(
     () => ({
@@ -64,13 +78,22 @@ export function useHome() {
       playlists,
       history,
     }),
-    [songs, albums, artists, playlists, history]
+    [
+      songs,
+      albums,
+      artists,
+      playlists,
+      history,
+    ]
   );
 
   const refetch = () => {
     songsQuery.refetch();
+
     albumsQuery.refetch();
+
     artistsQuery.refetch();
+
     playlistsQuery.refetch();
 
     if (isAuthenticated) {
@@ -80,10 +103,14 @@ export function useHome() {
 
   return {
     ...data,
+
     isLoading,
+
     isError,
+
     refetch,
   };
 }
 
+export { useHome };
 export default useHome;
