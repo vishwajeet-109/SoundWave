@@ -10,7 +10,6 @@ export default function RecentlyPlayed({
 }) {
   return (
     <section className="mt-14">
-
       <SectionHeader
         title="Recently Played"
         href="/me/history"
@@ -18,23 +17,23 @@ export default function RecentlyPlayed({
 
       {loading ? (
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-
           {Array.from({ length: 6 }).map((_, index) => (
             <MusicCardSkeleton key={index} />
           ))}
-
         </div>
       ) : songs.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-
-          {songs.map((song) => (
-            <MusicCard
-              key={song._id}
-              song={song}
-              onPlay={onPlay}
-            />
-          ))}
-
+          {songs.map((song) => {
+            const actualSong = song?.song || song;
+            return (
+              <MusicCard
+                key={actualSong._id || Math.random()}
+                song={actualSong}
+                playlist={songs}
+                onPlay={onPlay}
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="flex h-40 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900">
@@ -43,7 +42,6 @@ export default function RecentlyPlayed({
           </p>
         </div>
       )}
-
     </section>
   );
 }

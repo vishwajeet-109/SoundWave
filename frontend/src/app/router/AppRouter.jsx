@@ -14,29 +14,23 @@ import RoleRoute from "@/components/auth/RoleRoute";
 import Login from "@/features/auth/pages/Login";
 import Register from "@/features/auth/pages/Register";
 
-// Home
+// Home & Core Pages
 import Home from "@/features/home/pages/Home";
-
-// Search
 import Search from "@/features/search/pages/Search";
+import QueuePage from "@/features/home/pages/QueuePage";
+import ProfilePage from "@/features/home/pages/ProfilePage";
+import HistoryPage from "@/features/home/pages/HistoryPage"; // Real History Page
+import SettingsPage from "@/features/home/pages/SettingsPage"; // Real Settings Page
 
-// Albums
+// Details Pages
 import AlbumDetails from "@/features/albums/pages/AlbumDetails";
-
-// Artists
 import ArtistDetails from "@/features/home/pages/ArtistDetails";
-
-// Playlists
 import PlaylistDetails from "@/features/home/pages/PlaylistDetails";
 
 // Library
 import Library from "@/features/library/pages/Library";
 
-// Queue
-import QueuePage from "@/features/home/pages/QueuePage";
-
-// Profile
-import ProfilePage from "@/features/home/pages/ProfilePage";
+// Artist Dashboard Imports
 import CreateArtistPage from "@/features/admin/pages/CreateArtistPage";
 import UploadSong from "@/features/artist-dashboard/pages/UploadSong";
 import DashboardHome from "@/features/artist-dashboard/pages/DashboardHome";
@@ -47,18 +41,10 @@ import Notifications from "@/features/artist-dashboard/pages/Notifications";
 import ProfileSettings from "@/features/artist-dashboard/pages/ProfileSettings";
 import AccountSettings from "@/features/artist-dashboard/pages/AccountSettings";
 import MySongs from "@/features/artist-dashboard/pages/MySongs";
-
+import UploadAlbum from "@/features/artist-dashboard/pages/UploadAlbum";
+import MyAlbums from "@/features/artist-dashboard/pages/MyAlbums";
 // Admin Imports
 import { SongApproval, AdminDashboard } from "@/features/admin";
-
-function PlaceholderPage({ title, subtitle }) {
-  return (
-    <div className="p-8 text-zinc-100">
-      <h1 className="text-2xl font-bold mb-2">{title}</h1>
-      {subtitle && <p className="text-zinc-400">{subtitle}</p>}
-    </div>
-  );
-}
 
 export default function AppRouter() {
   return (
@@ -69,28 +55,30 @@ export default function AppRouter() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
+        {/* User / Listener Section - Fully Functional Pages */}
         <Route element={<AppShell />}>
           <Route index element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/library" element={<Library />} />
-          <Route path="/queue" element={<QueuePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/albums/:id" element={<AlbumDetails />} />
-          <Route path="/artists/:id" element={<ArtistDetails />} />
-          <Route path="/playlists/:id" element={<PlaylistDetails />} />
+          <Route path="search" element={<Search />} />
+          <Route path="library" element={<Library />} />
+          <Route path="queue" element={<QueuePage />} />
+          <Route path="history" element={<HistoryPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="settings" element={<SettingsPage />} />
+
+          {/* Dynamic Detail Pages */}
+          <Route path="albums/:id" element={<AlbumDetails />} />
+          <Route path="artists/:id" element={<ArtistDetails />} />
+          <Route path="playlists/:id" element={<PlaylistDetails />} />
         </Route>
 
+        {/* Artist Section Routes */}
         <Route element={<RoleRoute allowedRoles={["ARTIST"]} />}>
           <Route path="/artist" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="dashboard" element={<DashboardHome />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="upload" element={<UploadSong />} />
-            <Route path="upload-album" element={<PlaceholderPage title="Upload Album" />} />
             <Route path="songs" element={<MySongs />} />
-            <Route path="albums" element={<PlaceholderPage title="My Albums" />} />
-            <Route path="my-songs" element={<MySongs />} />
-            <Route path="my-albums" element={<PlaceholderPage title="My Albums" />} />
             <Route path="audience" element={<Audience />} />
             <Route path="followers" element={<Audience />} />
             <Route path="earnings" element={<Earnings />} />
@@ -98,9 +86,13 @@ export default function AppRouter() {
             <Route path="notifications" element={<Notifications />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="settings" element={<AccountSettings />} />
+            <Route path="upload-album" element={<UploadAlbum />} />
+            <Route path="albums" element={<MyAlbums />} />
+            <Route path="my-albums" element={<MyAlbums />} />
           </Route>
         </Route>
 
+        {/* Admin Section Routes */}
         <Route element={<RoleRoute allowedRoles={["ADMIN", "SUPER_ADMIN"]} />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />

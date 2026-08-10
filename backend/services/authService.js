@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Artist from "../models/Artist.js";
 import ApiError from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
 import generateAccessToken from "../utils/generateAccessToken.js";
@@ -19,11 +20,21 @@ class AuthService {
       throw new ApiError(409, "Email already exists");
     }
 
+    // 1. User create karein (role agar data mein nahi hai toh default 'user' ya schema default uthayega)
     const user = await User.create({
       name: data.name,
       email,
       password: data.password,
+      role: data.role || ROLES.USER, // Ensure ROLES constant ya string properly mapped ho
     });
+
+    // 2. Agar registered user ka role ARTIST hai, toh 'artists' collection mein entry banayein
+    if (user.role === ROLES.ARTIST) {
+      await Artist.create({
+        user: user._id, // User ki id se link karein
+        name: user.name, // Initial name sync
+      });
+    }
 
     return user;
   }

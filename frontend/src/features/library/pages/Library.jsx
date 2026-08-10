@@ -14,21 +14,7 @@ import RecentlyPlayedSection from "../components/RecentlyPlayedSection";
 import { useLibrary } from "../hooks/useLibrary";
 
 export default function Library() {
-
-  /*
-  |--------------------------------------------------------------------------
-  | Active Tab
-  |--------------------------------------------------------------------------
-  */
-
-  const [activeTab, setActiveTab] =
-    useState("All");
-
-  /*
-  |--------------------------------------------------------------------------
-  | Library Data
-  |--------------------------------------------------------------------------
-  */
+  const [activeTab, setActiveTab] = useState("All");
 
   const {
     data,
@@ -38,67 +24,46 @@ export default function Library() {
 
   /*
   |--------------------------------------------------------------------------
-  | Normalized Data
+  | Normalized & Future-Proofed Safe Data Mapping
   |--------------------------------------------------------------------------
   */
-
   const library = useMemo(() => {
     return {
-      likedSongs:
-        data?.likedSongs || [],
+      likedSongs: Array.isArray(data?.likedSongs) 
+        ? data.likedSongs 
+        : Array.isArray(data?.likes) 
+        ? data.likes 
+        : [],
 
-      playlists:
-        data?.playlists || [],
+      playlists: Array.isArray(data?.playlists) 
+        ? data.playlists 
+        : [],
 
-      albums:
-        data?.albums || [],
+      albums: Array.isArray(data?.albums) 
+        ? data.albums 
+        : [],
 
-      artists:
-        data?.artists || [],
+      artists: Array.isArray(data?.artists) 
+        ? data.artists 
+        : [],
 
-      recentlyPlayed:
-        data?.recentlyPlayed || [],
+      recentlyPlayed: Array.isArray(data?.recentlyPlayed) 
+        ? data.recentlyPlayed 
+        : [],
     };
   }, [data]);
-
-  /*
-  |--------------------------------------------------------------------------
-  | Loading
-  |--------------------------------------------------------------------------
-  */
 
   if (isLoading) {
     return <LibrarySkeleton />;
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Error
-  |--------------------------------------------------------------------------
-  */
-
   if (isError) {
     return (
-      <div
-        className="
-          flex
-          h-[70vh]
-          items-center
-          justify-center
-        "
-      >
-        <p className="text-red-500">
-          Failed to load library.
-        </p>
+      <div className="flex h-[70vh] items-center justify-center">
+        <p className="text-red-500 font-medium">Failed to load library data.</p>
       </div>
     );
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Empty Library
-  |--------------------------------------------------------------------------
-  */
 
   const isEmpty =
     !library.likedSongs.length &&
@@ -107,112 +72,43 @@ export default function Library() {
     !library.artists.length &&
     !library.recentlyPlayed.length;
 
-  if (isEmpty) {
+  if (isEmpty && activeTab === "All") {
     return <EmptyLibrary />;
   }
 
   return (
-
-    <main
-      className="
-        space-y-12
-        pb-32
-      "
-    >
-
-      {/* ==========================================
-          Library Hero
-      ========================================== */}
-
+    <main className="space-y-8 pb-32 px-6 pt-4 text-zinc-100">
+      {/* Library Hero Header */}
       <LibraryHero />
 
-      {/* ==========================================
-          Library Tabs
-      ========================================== */}
-
+      {/* Library Tabs Switcher */}
       <LibraryTabs
         active={activeTab}
         onChange={setActiveTab}
       />
-            {/* ==========================================
-          Library Content
-      ========================================== */}
 
-      {/* ------------------------------------------
-          Liked Songs
-      ------------------------------------------ */}
-
-      {(activeTab === "All" ||
-        activeTab === "Liked Songs") &&
-        !!library.likedSongs.length && (
-          <LikedSongsSection
-            songs={library.likedSongs}
-          />
+      {/* Dynamic Content Sections */}
+      <div className="space-y-10">
+        {(activeTab === "All" || activeTab === "Liked Songs") && (
+          <LikedSongsSection songs={library.likedSongs} />
         )}
 
-      {/* ------------------------------------------
-          Playlists
-      ------------------------------------------ */}
-
-      {(activeTab === "All" ||
-        activeTab === "Playlists") &&
-        !!library.playlists.length && (
-          <PlaylistsSection
-            playlists={library.playlists}
-          />
+        {(activeTab === "All" || activeTab === "Playlists") && (
+          <PlaylistsSection playlists={library.playlists} />
         )}
 
-      {/* ------------------------------------------
-          Albums
-      ------------------------------------------ */}
-
-      {(activeTab === "All" ||
-        activeTab === "Albums") &&
-        !!library.albums.length && (
-          <AlbumsSection
-            albums={library.albums}
-          />
+        {(activeTab === "All" || activeTab === "Albums") && (
+          <AlbumsSection albums={library.albums} />
         )}
 
-      {/* ------------------------------------------
-          Artists
-      ------------------------------------------ */}
-
-      {(activeTab === "All" ||
-        activeTab === "Artists") &&
-        !!library.artists.length && (
-          <ArtistsSection
-            artists={library.artists}
-          />
+        {(activeTab === "All" || activeTab === "Artists") && (
+          <ArtistsSection artists={library.artists} />
         )}
 
-      {/* ------------------------------------------
-          Recently Played
-      ------------------------------------------ */}
-
-      {(activeTab === "All" ||
-        activeTab === "Recently Played") &&
-        !!library.recentlyPlayed.length && (
-          <RecentlyPlayedSection
-            songs={library.recentlyPlayed}
-          />
+        {(activeTab === "All" || activeTab === "Recently Played") && (
+          <RecentlyPlayedSection songs={library.recentlyPlayed} />
         )}
-              {/* ==========================================
-          FUTURE FEATURES
-          ------------------------------------------
-          □ Pin Playlists
-          □ Sort Library
-          □ Smart Collections
-          □ Offline Downloads
-          □ Drag & Drop
-          □ Multi Select
-          □ Folder Support
-          □ Recently Added
-          □ Shared Playlists
-          □ Recommended Albums
-          □ Favorite Artists
-          ========================================== */}
-
+      </div>
     </main>
   );
 }

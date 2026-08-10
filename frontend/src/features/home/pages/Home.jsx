@@ -69,21 +69,22 @@ export default function Home() {
 
       <HeroSection
         featured={songs[0]}
+        onPlay={(song) => playSong(song, songs)}
       />
 
       <QuickAccess
         songs={songs}
-        onPlay={playSong}
+        onPlay={(song) => playSong(song, songs)}
       />
 
       <RecentlyPlayed
         songs={history}
-        onPlay={playSong}
+        onPlay={(song) => playSong(song, history)}
       />
 
       <TrendingSongs
         songs={songs}
-        onPlay={playSong}
+        onPlay={(song) => playSong(song, songs)}
       />
 
       <PopularArtists
@@ -104,7 +105,7 @@ export default function Home() {
 
       <ContinueListening
         songs={history}
-        onPlay={playSong}
+        onPlay={(song) => playSong(song, history)}
       />
 
     </div>

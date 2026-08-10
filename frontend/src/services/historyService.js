@@ -7,6 +7,11 @@ class HistoryService {
     });
   }
 
+  // 🚀 Added method to record/save played song to history
+  addToHistory(songId) {
+    return api.post("/me/history", { songId }); // Agar backend ka route alag ho (jaise /history), toh wahan change kar sakte hain
+  }
+
   clearHistory() {
     return api.delete("/me/history");
   }

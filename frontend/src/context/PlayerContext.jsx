@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import historyService from "@/services/historyService"; // 🚀 Added history service import
 
 const PlayerContext = createContext(null);
 
@@ -135,16 +136,19 @@ const playSong = async (song, playlist = []) => {
   if (!song) return;
 
   try {
-    if (playlist.length) {
-      setQueue(playlist);
-
-      const index = playlist.findIndex(
-        (item) => item._id === song._id
-      );
-
-      setCurrentIndex(index);
+    let activeQueue = playlist;
+    
+    if (!activeQueue.length) {
+      activeQueue = queue.length ? queue : [song];
     }
 
+    setQueue(activeQueue);
+
+    const index = activeQueue.findIndex(
+      (item) => (item._id || item.id) === (song._id || song.id)
+    );
+
+    setCurrentIndex(index !== -1 ? index : 0);
     setCurrentSong(song);
 
     audioRef.current.src =
@@ -156,9 +160,27 @@ const playSong = async (song, playlist = []) => {
     await audioRef.current.play();
 
     setIsPlaying(true);
+
+    // 🚀 CRITICAL FIX: Record play history to backend
+    const songId = song._id || song.id;
+    if (songId) {
+      historyService.addToHistory(songId).catch((err) => {
+        console.warn("Failed to record history:", err.response?.data || err.message);
+      });
+    }
+
   } catch (error) {
     console.error("Play Error:", error);
   }
+};
+
+const addToQueue = (song) => {
+  if (!song) return;
+  setQueue((prev) => [...prev, song]);
+};
+
+const removeFromQueue = (index) => {
+  setQueue((prev) => prev.filter((_, i) => i !== index));
 };
 
 const togglePlayPause = async () => {
@@ -315,6 +337,8 @@ useEffect(() => {
       setRepeat,
 
       playSong,
+      addToQueue,
+      removeFromQueue,
       togglePlayPause,
       stopSong,
       resetPlayerState,

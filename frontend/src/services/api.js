@@ -2,8 +2,6 @@ import axios from "axios";
 import { storage } from "@/utils/storage";
 import { resetPlayerForLogout } from "@/context/PlayerContext";
 
-
-
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1",
   timeout: 30000,
@@ -13,6 +11,7 @@ const api = axios.create({
   },
 });
 
+// Request Interceptor: Attach Token
 api.interceptors.request.use((config) => {
   const token = storage.getToken();
 
@@ -21,8 +20,11 @@ api.interceptors.request.use((config) => {
   }
 
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
+// Response Interceptor: Keep response as is to prevent breaking service files
 api.interceptors.response.use(
   (response) => response,
 

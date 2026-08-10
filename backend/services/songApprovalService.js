@@ -74,6 +74,7 @@ const approveSong = async ({ songId, adminId, note, req }) => {
   song.approvedAt = new Date();
   song.reviewedBy = adminId;
   song.reviewedAt = new Date();
+  song.publishedAt = new Date(); 
   song.rejectedReason = null;
   song.blockedReason = null;
   await song.save();

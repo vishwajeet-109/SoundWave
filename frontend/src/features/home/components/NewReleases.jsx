@@ -8,14 +8,14 @@ export default function NewReleases({
 }) {
   return (
     <section className="mt-14">
-
       <SectionHeader
         title="New Releases"
         href="/albums"
       />
 
       {loading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+        // Baaki sections ke skeleton grid ke barabar
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
@@ -24,11 +24,13 @@ export default function NewReleases({
           ))}
         </div>
       ) : albums.length > 0 ? (
-        <div className="grid gap-6 auto-rows-fr sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+        // 🚀 Exact same grid columns as other sections (2 -> 3 -> 4 -> 6)
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
           {albums.map((album) => (
             <AlbumCard
               key={album._id}
               album={album}
+              playlist={albums}
               onPlay={onPlay}
             />
           ))}
@@ -40,7 +42,6 @@ export default function NewReleases({
           </p>
         </div>
       )}
-
     </section>
   );
 }
