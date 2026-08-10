@@ -66,48 +66,53 @@ export default function Home() {
 
   return (
     <div className="space-y-14">
-
+      {/* 🚀 Fixed: passed playlist={songs} instead of onPlay */}
       <HeroSection
         featured={songs[0]}
-        onPlay={(song) => playSong(song, songs)}
+        playlist={songs}
       />
 
       <QuickAccess
         songs={songs}
-        onPlay={(song) => playSong(song, songs)}
+        onPlay={(song, list) => playSong(song, list || songs)}
       />
 
       <RecentlyPlayed
         songs={history}
-        onPlay={(song) => playSong(song, history)}
+        onPlay={(song, list) => playSong(song, list || history)}
       />
 
       <TrendingSongs
         songs={songs}
-        onPlay={(song) => playSong(song, songs)}
+        onPlay={(song, list) => playSong(song, list || songs)}
       />
 
       <PopularArtists
         artists={artists}
       />
 
+      {/* 🚀 Added onPlay for New Releases */}
       <NewReleases
         albums={albums}
+        onPlay={(song, list) => playSong(song, list)}
       />
 
+      {/* 🚀 Added onPlay for Made For You */}
       <MadeForYou
         playlists={playlists}
+        onPlay={(song, list) => playSong(song, list)}
       />
 
+      {/* 🚀 Added onPlay for Featured Playlists */}
       <FeaturedPlaylists
         playlists={playlists}
+        onPlay={(song, list) => playSong(song, list)}
       />
 
       <ContinueListening
         songs={history}
-        onPlay={(song) => playSong(song, history)}
+        onPlay={(song, list) => playSong(song, list || history)}
       />
-
     </div>
   );
 }
